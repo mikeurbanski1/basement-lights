@@ -5,7 +5,14 @@ import serial
 import time
 
 if __name__ == '__main__':
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)
+
+    if len(sys.argv) < 2:
+        print('Error: missing serial port arg', file=sys.stderr)
+        exit(1)
+
+    port = sys.argv[1]
+
+    ser = serial.Serial(port, 9600, timeout=1)
     ser.flush()
 
     print('Press enter')

@@ -1,1 +1,1 @@
-python3 python/main.py
+python3 python/main.py "$(ls /dev/ttyACM*)"
