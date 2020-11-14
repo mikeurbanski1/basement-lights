@@ -89,6 +89,8 @@ if __name__ == '__main__':
             app.config['ASK_VERIFY_REQUESTS'] = False
     app.run(debug=True)
 
+    logger.info(f'Sleeping for 5 seconds while arduino boots')
+    time.sleep(5)
     print('Sending initialization message')
     send_command('init')
     time.sleep(0.1)
