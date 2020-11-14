@@ -1,1 +1,2 @@
-python3 python/main.py "$(ls /dev/ttyACM*)"
+export COM_PORT="$(ls /dev/ttyACM*)"
+python3 python/alexa.py
