@@ -46,13 +46,13 @@ int modeRepeat[] = {
 
 // the number of iterations for one complete execution of the mode
 int modeLoops[] = {
-  4, //binaryCount
+  32, //binaryCount
   2, //alternate
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
-  1000, //binaryCount
+  333, //binaryCount
   1000, //alternate
 };
 
@@ -103,7 +103,6 @@ void loop() {
   }
 
   if (autoCycle) {
-    reset();
     for (mode = 0; mode < NUM_MODES; mode++) {
       for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode]; modeIterationNumber++) {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
@@ -117,6 +116,7 @@ void loop() {
         }
       }
     }
+    reset();
   }
   else if (mode >= 0 && mode < NUM_MODES) {
     // a mode was explicitly selected, so just run the inner loop repeatedly
@@ -173,6 +173,7 @@ boolean checkCommand() {
     else if (data.equals("AUTOCYCLE_ON")) {
       autoCycle = true;
       mode = random(0, NUM_MODES);
+      off();
       return true;
     }
     if (data.equals("BLUE")) {
@@ -192,8 +193,8 @@ boolean checkCommand() {
         if (data.equals(modeCommands[m])) {
           mode = m;
           autoCycle = false;
+          off();
           return true;
-          break;
         }
       }
     }
@@ -225,8 +226,13 @@ void binaryCount() {
     savedColor = randomColor();
   }
 
-  setPixelColor(0, modeLoopNumber % 2 == 0 ? OFF : savedColor);
-  setPixelColor(1, (modeLoopNumber / 2) % 2 == 0 ? OFF : savedColor);
+  int v = modeLoopNumber;
+
+  for (int i = 0; i < 5; i++) { //goes up to 2 ^ n
+    setPixelColor(i, v % 2 == 0 ? OFF : savedColor);
+    v = v / 2;
+  }
+
   show();
 }
 
