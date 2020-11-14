@@ -38,41 +38,41 @@ void loop() {
     if (data.equals("BLUE_ON")) {
       if (blueState == LOW) {
         digitalWrite(bluePin, HIGH);
-        Serial.println("SUCCESS");
+        Serial.println(data + " SUCCESS");
         blueState = HIGH;
       }
       else {
-        Serial.println("NO_CHANGE");
+        Serial.println(data + " NO_CHANGE");
       }
     }
     else if (data.equals("GREEN_ON")) {
       if (greenState == LOW) {
         digitalWrite(greenPin, HIGH);
-        Serial.println("SUCCESS");
+        Serial.println(data + " SUCCESS");
         greenState = HIGH;
       }
       else {
-        Serial.println("NO_CHANGE");
+        Serial.println(data + " NO_CHANGE");
       }
     }
     if (data.equals("BLUE_OFF")) {
       if (blueState == HIGH) {
         digitalWrite(bluePin, LOW);
-        Serial.println("SUCCESS");
+        Serial.println(data + " SUCCESS");
         blueState = LOW;
       }
       else {
-        Serial.println("NO_CHANGE");
+        Serial.println(data + " NO_CHANGE");
       }
     }
     else if (data.equals("GREEN_OFF")) {
       if (greenState == HIGH) {
         digitalWrite(greenPin, LOW);
-        Serial.println("SUCCESS");
+        Serial.println(data + " SUCCESS");
         greenState = LOW;
       }
       else {
-        Serial.println("NO_CHANGE");
+        Serial.println(data + " NO_CHANGE");
       }
     }
     else {
