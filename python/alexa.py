@@ -27,7 +27,7 @@ def launch():
 
 
 @ask.intent('LightIntent', mapping={'status': 'status'})
-def set_lights(status: str, room):
+def set_lights(status, room):
     logger.info(status)
 
     if status.lower() == 'off':
