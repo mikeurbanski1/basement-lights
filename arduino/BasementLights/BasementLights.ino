@@ -27,7 +27,8 @@ void loop() {
       delay(200);
     }
 
-    Serial.readStringUntil('\n');
+    String data = Serial.readStringUntil('\n');
+    Serial.println("INITIALIZED")
     initialized = true;
     digitalWrite(yellowPin, LOW);
   

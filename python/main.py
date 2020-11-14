@@ -15,11 +15,14 @@ if __name__ == '__main__':
     ser = serial.Serial(port, 9600, timeout=1)
     ser.flush()
 
-    print('Press enter')
+    print('Press enter to initialize')
     sys.stdin.readline()
     print('Sending initialization message')
     ser.write(b'Init\n')
     ser.flush()
+
+    time.sleep(0.1)
+    print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
     while True:
         cmd = input('Enter command: ')
