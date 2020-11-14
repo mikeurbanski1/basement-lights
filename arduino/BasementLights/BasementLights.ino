@@ -36,6 +36,11 @@ int modeLoopDelay[] = {
   1000, //alternate
 };
 
+String modeCommands[] = {
+  "MODE_0",
+  "MODE_1"
+};
+
 // mode state
 int mode = 0;
 int NUM_MODES = 2;
@@ -72,14 +77,27 @@ void loop() {
     delay(10);
   }
 
-  for (mode = 0; mode < NUM_MODES; mode++) {
-    for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode]; modeIterationNumber++) {
-      for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
-        modes[mode]();
-        delay(modeLoopDelay[mode]);
+  if (autoCycle) {
+    for (mode = 0; mode < NUM_MODES; mode++) {
+      for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode]; modeIterationNumber++) {
+        for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
+          modes[mode]();
+          delay(modeLoopDelay[mode]);
+        }
       }
+      reset();
     }
-    reset();
+  }
+  else if (mode >= 0 && mode < NUM_MODES) {
+    // a mode was explicitly selected, so just run the inner loop repeatedly
+    for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
+      modes[mode]();
+      delay(modeLoopDelay[mode]);
+    }
+  }
+  else {
+    // SOLID or OFF were selected, and would have already been set, so do nothing
+    delay(10);
   }
 
 
@@ -143,13 +161,61 @@ void initialize() {
   digitalWrite(yellowPin, LOW);
 }
 
-boolean hasCommand() {
-  return Serial.available() > 0;
+boolean checkCommand() {
+  if (Serial.available() > 0) {
+    String data = Serial.readStringUntil('\n');
+
+//    boolean validCommand = false;
+
+    if (data.equals("SOLID")) {
+      solid();
+      mode = SOLID;
+      autoCycle = false;
+      return true;
+//      validCommand = true;
+    }
+    else if (data.equals("OFF")) {
+      off();
+      mode = OFF;
+      autoCycle = false;
+      return true;
+//      validCommand = true;
+    }
+    else if (data.equals("AUTOCYCLE_ON")) {
+      autoCycle = true;
+      mode = random(0, NUM_MODES);
+      return true;
+//      validCommand = true;
+    }
+    else {
+      for (int m = 0; m < NUM_MODES; m++) {
+        if (data.equals(modeCommands[m])) {
+          mode = m;
+          autoCycle = false;
+//          validCommand = true;
+          break;
+        }
+      }
+    }
+    
+  }
+  else {
+    return false;
+  }
 }
 
 void reset() {
   digitalWrite(bluePin, LOW);
   digitalWrite(greenPin, LOW);
+}
+
+void solid() {
+  digitalWrite(bluePin, HIGH);
+  digitalWrite(greenPin, HIGH);
+}
+
+void off() {
+  reset();
 }
 
 void binaryCount() {
