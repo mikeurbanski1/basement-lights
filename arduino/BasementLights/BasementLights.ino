@@ -28,7 +28,7 @@ void loop() {
     }
 
     String data = Serial.readStringUntil('\n');
-    Serial.println("INITIALIZED")
+    Serial.println("INITIALIZED");
     initialized = true;
     digitalWrite(yellowPin, LOW);
   
