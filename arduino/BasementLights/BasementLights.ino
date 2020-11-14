@@ -10,6 +10,19 @@ int greenState = LOW;
 
 bool initialized = false;
 
+/*
+ * How to add a mode:
+ * 
+ * 1. Add a method definition
+ * 2. Add the method to the array
+ * 3. Set the number of times the mode should be repeated (in autocycle mode)
+ * 4. Set the number of iterations that constitute one full cycle of the mode
+ * 5. Set the delay between iterations in #4
+ * 6. Add a new entry into modeCommands
+ * 7. Increment NUM_MODES
+ * 8. Implement the method
+ */
+
 // mode definition
 void binaryCount();
 void alternate();
@@ -31,26 +44,25 @@ int modeLoops[] = {
   2, //alternate
 };
 
+// delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
   1000, //binaryCount
   1000, //alternate
 };
 
+// placeholders to accept mode commands
 String modeCommands[] = {
   "MODE_0",
   "MODE_1"
 };
 
-// mode state
-int mode = 0;
 int NUM_MODES = 2;
-boolean autoCycle = true;
+
+// mode state
+int mode = SOLID;
+boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
-
-//boolean firstOfMode;
-//boolean firstOfOuterMode;
-
 
 void setup() {
   pinMode(bluePin, OUTPUT);
@@ -110,56 +122,6 @@ void loop() {
 
     checkCommand(); // we'll always start at the top of the loop so no need for an if here
   }
-
-
-//  if (Serial.available() > 0) {
-//    String data = Serial.readStringUntil('\n');
-//    if (data.equals("BLUE_ON")) {
-//      if (blueState == LOW) {
-//        digitalWrite(bluePin, HIGH);
-//        Serial.println(data + " SUCCESS");
-//        blueState = HIGH;
-//      }
-//      else {
-//        Serial.println(data + " NO_CHANGE");
-//      }
-//    }
-//    else if (data.equals("GREEN_ON")) {
-//      if (greenState == LOW) {
-//        digitalWrite(greenPin, HIGH);
-//        Serial.println(data + " SUCCESS");
-//        greenState = HIGH;
-//      }
-//      else {
-//        Serial.println(data + " NO_CHANGE");
-//      }
-//    }
-//    else if (data.equals("BLUE_OFF")) {
-//      if (blueState == HIGH) {
-//        digitalWrite(bluePin, LOW);
-//        Serial.println(data + " SUCCESS");
-//        blueState = LOW;
-//      }
-//      else {
-//        Serial.println(data + " NO_CHANGE");
-//      }
-//    }
-//    else if (data.equals("GREEN_OFF")) {
-//      if (greenState == HIGH) {
-//        digitalWrite(greenPin, LOW);
-//        Serial.println(data + " SUCCESS");
-//        greenState = LOW;
-//      }
-//      else {
-//        Serial.println(data + " NO_CHANGE");
-//      }
-//    }
-//    else {
-//      Serial.println("Unknown command: '" + data + "'");
-//    }
-//    Serial.flush();
-//    delay(10);
-//  }
 }
 
 void initialize() {
@@ -176,27 +138,22 @@ boolean checkCommand() {
   if (Serial.available() > 0) {
     String data = Serial.readStringUntil('\n');
 
-//    boolean validCommand = false;
-
     if (data.equals("SOLID")) {
       solid();
       mode = SOLID;
       autoCycle = false;
       return true;
-//      validCommand = true;
     }
     else if (data.equals("OFF")) {
       off();
       mode = OFF;
       autoCycle = false;
       return true;
-//      validCommand = true;
     }
     else if (data.equals("AUTOCYCLE_ON")) {
       autoCycle = true;
       mode = random(0, NUM_MODES);
       return true;
-//      validCommand = true;
     }
     else {
       for (int m = 0; m < NUM_MODES; m++) {
@@ -204,7 +161,6 @@ boolean checkCommand() {
           mode = m;
           autoCycle = false;
           return true;
-//          validCommand = true;
           break;
         }
       }
