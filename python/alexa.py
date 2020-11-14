@@ -79,12 +79,6 @@ def send_command(command):
 
 if __name__ == '__main__':
 
-    if 'ASK_VERIFY_REQUESTS' in os.environ:
-        verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
-        if verify == 'false':
-            app.config['ASK_VERIFY_REQUESTS'] = False
-    app.run(debug=True)
-
     ser = serial.Serial(port, 9600, timeout=1)
     ser.flush()
 
@@ -94,4 +88,12 @@ if __name__ == '__main__':
     send_command('init')
     time.sleep(0.1)
     print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+
+    if 'ASK_VERIFY_REQUESTS' in os.environ:
+        verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
+        if verify == 'false':
+            app.config['ASK_VERIFY_REQUESTS'] = False
+    app.run(debug=True)
+
+
 
