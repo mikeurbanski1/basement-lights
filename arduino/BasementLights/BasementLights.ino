@@ -76,13 +76,14 @@ COLOR savedColor;
 
 void setup() {
 
-  FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN>(ledStrip, NUM_LEDS);
+  FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN, GRB>(ledStrip, NUM_LEDS);
   FastLED.setBrightness(20);
   
   pinMode(yellowPin, OUTPUT);
   Serial.begin(9600);
 
   randomSeed(analogRead(0) * millis());
+  reset();
 }
 
 int value = 0;
@@ -102,6 +103,7 @@ void loop() {
   }
 
   if (autoCycle) {
+    reset();
     for (mode = 0; mode < NUM_MODES; mode++) {
       for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode]; modeIterationNumber++) {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
@@ -114,7 +116,6 @@ void loop() {
           }
         }
       }
-      reset();
     }
   }
   else if (mode >= 0 && mode < NUM_MODES) {
