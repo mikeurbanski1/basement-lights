@@ -29,6 +29,6 @@ if __name__ == '__main__':
         print(f'Sending command: "{cmd}"')
         ser.write((cmd + '\n').encode('utf-8'))
         ser.flush()
-        time.sleep(0.1)
-        print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+        # time.sleep(0.1)
+        # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
