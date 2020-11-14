@@ -83,6 +83,11 @@ void loop() {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
           modes[mode]();
           delay(modeLoopDelay[mode]);
+
+          // check if a command was issued; if so, the command will reset the state and we'll start at the top
+          if (checkCommand()) {
+            return;
+          }
         }
       }
       reset();
@@ -192,16 +197,15 @@ boolean checkCommand() {
         if (data.equals(modeCommands[m])) {
           mode = m;
           autoCycle = false;
+          return true;
 //          validCommand = true;
           break;
         }
       }
     }
-    
   }
-  else {
-    return false;
-  }
+
+  return false;
 }
 
 void reset() {
