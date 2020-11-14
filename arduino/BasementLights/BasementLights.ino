@@ -98,11 +98,17 @@ void loop() {
     for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
       modes[mode]();
       delay(modeLoopDelay[mode]);
+
+      if (checkCommand()) {
+        return;
+      }
     }
   }
   else {
     // SOLID or OFF were selected, and would have already been set, so do nothing
     delay(10);
+
+    checkCommand(); // we'll always start at the top of the loop so no need for an if here
   }
 
 
