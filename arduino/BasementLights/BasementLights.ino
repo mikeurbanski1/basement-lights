@@ -1,7 +1,6 @@
 #define SOLID_MODE -1
 #define OFF_MODE -2
-#define COLOR uint32_t
-#define OFF 0
+#define COLOR CRGB
 
 #include "FastLED.h"
 
@@ -10,6 +9,8 @@
 #define CLOCK_PIN 13
 
 CRGB ledStrip[NUM_LEDS];
+
+CRGB OFF = CRGB(0, 0, 0);
 
 int yellowPin = 4;
 
@@ -64,8 +65,8 @@ String modeCommands[] = {
 int NUM_MODES = 2;
 
 // mode state
-int mode = SOLID_MODE;
-boolean autoCycle = false;
+int mode = 0;
+boolean autoCycle = true;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
 
@@ -88,17 +89,17 @@ int value = 0;
 
 void loop() {
 
-  if (!initialized) {
-    int initLoopCount = 0;
-    while (Serial.available() == 0) {
-      digitalWrite(yellowPin, initLoopCount % 2);
-      initLoopCount = 1 - initLoopCount;
-      delay(200);
-    }
-
-    initialize();
-    delay(10);
-  }
+//  if (!initialized) {
+//    int initLoopCount = 0;
+//    while (Serial.available() == 0) {
+//      digitalWrite(yellowPin, initLoopCount % 2);
+//      initLoopCount = 1 - initLoopCount;
+//      delay(200);
+//    }
+//
+//    initialize();
+//    delay(10);
+//  }
 
   if (autoCycle) {
     for (mode = 0; mode < NUM_MODES; mode++) {
@@ -108,9 +109,9 @@ void loop() {
           delay(modeLoopDelay[mode]);
 
           // check if a command was issued; if so, the command will reset the state and we'll start at the top
-          if (checkCommand()) {
-            return;
-          }
+//          if (checkCommand()) {
+//            return;
+//          }
         }
       }
       reset();
@@ -216,8 +217,8 @@ void binaryCount() {
     savedColor = randomColor();
   }
 
-  setPixelColor(0, modeLoopNumber % 2 ? OFF : savedColor);
-  setPixelColor(1, (modeLoopNumber / 2) % 2 ? OFF : savedColor);
+  setPixelColor(0, modeLoopNumber % 2 == 0 ? OFF : savedColor);
+  setPixelColor(1, (modeLoopNumber / 2) % 2 == 0 ? OFF : savedColor);
   show();
 }
 
