@@ -55,7 +55,7 @@ void loop() {
         Serial.println(data + " NO_CHANGE");
       }
     }
-    if (data.equals("BLUE_OFF")) {
+    else if (data.equals("BLUE_OFF")) {
       if (blueState == HIGH) {
         digitalWrite(bluePin, LOW);
         Serial.println(data + " SUCCESS");
