@@ -23,7 +23,6 @@ mode_mapping = {
 @app.route('/hello')
 def hello_world():
     logger.info('logger hello')
-    logger.info(f'{os.environ}')
     return 'Hello World!'
 
 
@@ -105,7 +104,7 @@ if __name__ == '__main__':
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
             app.config['ASK_VERIFY_REQUESTS'] = False
-    app.run(host='0.0.0.0', port=7626, debug=True, ssl_context=('cert.pem', 'key.pem'))
+    app.run(host='0.0.0.0', port=7626, ssl_context=('cert.pem', 'key.pem'))
 
 
 
