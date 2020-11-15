@@ -34,7 +34,7 @@ def launch():
 
 @ask.intent('LightIntent', mapping={'status': 'status'})
 def set_lights(status, room):
-    logger.info(status)
+    app.logger.info(status)
 
     if status.lower() == 'off':
         send_command('OFF')
@@ -50,7 +50,7 @@ def set_lights(status, room):
 
 @ask.intent('ModeIntent', mapping={'mode': 'mode'})
 def set_mode(mode, room):
-    logger.info(mode)
+    app.logger.info(mode)
     mode_command = mode_mapping.get(mode.lower())
     if mode_command:
         send_command(mode_command)
@@ -61,7 +61,7 @@ def set_mode(mode, room):
 
 @ask.intent('ColorIntent', mapping={'color': 'color'})
 def set_color(color, room):
-    logger.info(color)
+    app.logger.info(color)
     send_command(color.upper())
     return statement(f'I set the color to {color}')
 
@@ -78,7 +78,7 @@ def session_ended():
 
 
 def send_command(command):
-    logger.info(f'Sending command: "{command}"')
+    app.logger.info(f'Sending command: "{command}"')
     # ser.write((command + '\n').encode('utf-8'))
     # ser.flush()
 
@@ -88,17 +88,17 @@ if __name__ == '__main__':
     # ser = serial.Serial(port, 9600, timeout=1)
     # ser.flush()
     #
-    # logger.info(f'Sleeping for 5 seconds while arduino boots')
+    # app.logger.info(f'Sleeping for 5 seconds while arduino boots')
     # time.sleep(5)
     # print('Sending initialization message')
     # send_command('init')
     # time.sleep(0.1)
     # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
-    logging.debug('debug')
-    logging.info('info')
-    logging.warning('warning')
-    logging.error('error')
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
 
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
