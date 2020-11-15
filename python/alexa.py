@@ -79,15 +79,15 @@ def send_command(command):
 
 if __name__ == '__main__':
 
-    ser = serial.Serial(port, 9600, timeout=1)
-    ser.flush()
-
-    logger.info(f'Sleeping for 5 seconds while arduino boots')
-    time.sleep(5)
-    print('Sending initialization message')
-    send_command('init')
-    time.sleep(0.1)
-    print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+    # ser = serial.Serial(port, 9600, timeout=1)
+    # ser.flush()
+    #
+    # logger.info(f'Sleeping for 5 seconds while arduino boots')
+    # time.sleep(5)
+    # print('Sending initialization message')
+    # send_command('init')
+    # time.sleep(0.1)
+    # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
