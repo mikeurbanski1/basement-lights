@@ -1,3 +1,6 @@
 .idea
 arduino/BasementLights/build/
 venv
+cert.pem
+key.pem
+
