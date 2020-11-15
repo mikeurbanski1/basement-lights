@@ -10,7 +10,6 @@ ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 logger = logging.getLogger('flask_ask')
-logger.addHandler(logging.StreamHandler())
 
 port = os.environ.get('COM_PORT', '/dev/ttyACM0')
 
@@ -24,7 +23,7 @@ mode_mapping = {
 @app.route('/hello')
 def hello_world():
     logger.info('logger hello')
-    app.logger.info('app logger hello')
+    logger.info(f'{os.environ}')
     return 'Hello World!'
 
 
@@ -36,7 +35,7 @@ def launch():
 
 @ask.intent('LightIntent', mapping={'status': 'status'})
 def set_lights(status, room):
-    app.logger.info(status)
+    logger.info(status)
 
     if status.lower() == 'off':
         send_command('OFF')
@@ -52,7 +51,7 @@ def set_lights(status, room):
 
 @ask.intent('ModeIntent', mapping={'mode': 'mode'})
 def set_mode(mode, room):
-    app.logger.info(mode)
+    logger.info(mode)
     mode_command = mode_mapping.get(mode.lower())
     if mode_command:
         send_command(mode_command)
@@ -63,7 +62,7 @@ def set_mode(mode, room):
 
 @ask.intent('ColorIntent', mapping={'color': 'color'})
 def set_color(color, room):
-    app.logger.info(color)
+    logger.info(color)
     send_command(color.upper())
     return statement(f'I set the color to {color}')
 
@@ -80,7 +79,7 @@ def session_ended():
 
 
 def send_command(command):
-    app.logger.info(f'Sending command: "{command}"')
+    logger.info(f'Sending command: "{command}"')
     # ser.write((command + '\n').encode('utf-8'))
     # ser.flush()
 
@@ -90,17 +89,17 @@ if __name__ == '__main__':
     # ser = serial.Serial(port, 9600, timeout=1)
     # ser.flush()
     #
-    # app.logger.info(f'Sleeping for 5 seconds while arduino boots')
+    # logger.info(f'Sleeping for 5 seconds while arduino boots')
     # time.sleep(5)
     # print('Sending initialization message')
     # send_command('init')
     # time.sleep(0.1)
     # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
-    app.logger.debug('debug')
-    app.logger.info('info')
-    app.logger.warning('warning')
-    app.logger.error('error')
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
 
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
