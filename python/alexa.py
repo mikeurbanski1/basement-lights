@@ -95,10 +95,10 @@ if __name__ == '__main__':
     # time.sleep(0.1)
     # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
-    logger.debug('debug')
-    logger.info('info')
-    logger.warning('warning')
-    logger.error('error')
+    app.logger.debug('debug')
+    app.logger.info('info')
+    app.logger.warning('warning')
+    app.logger.error('error')
 
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
