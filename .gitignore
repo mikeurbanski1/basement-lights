@@ -4,3 +4,4 @@ venv
 cert.pem
 key.pem
 __pycache__
+.well-known
