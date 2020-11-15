@@ -73,8 +73,8 @@ def session_ended():
 
 def send_command(command):
     logger.info(f'Sending command: "{command}"')
-    ser.write((command + '\n').encode('utf-8'))
-    ser.flush()
+    # ser.write((command + '\n').encode('utf-8'))
+    # ser.flush()
 
 
 if __name__ == '__main__':
