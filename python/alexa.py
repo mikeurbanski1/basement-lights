@@ -23,6 +23,8 @@ mode_mapping = {
 
 @app.route('/hello')
 def hello_world():
+    logger.info('logger hello')
+    app.logger.info('app logger hello')
     return 'Hello World!'
 
 
