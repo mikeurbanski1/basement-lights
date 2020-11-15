@@ -10,6 +10,7 @@ ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 logger = logging.getLogger('flask_ask')
+logger.addHandler(logging.StreamHandler())
 
 port = os.environ.get('COM_PORT', '/dev/ttyACM0')
 
@@ -93,6 +94,11 @@ if __name__ == '__main__':
     # send_command('init')
     # time.sleep(0.1)
     # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+
+    logging.debug('debug')
+    logging.info('info')
+    logging.warning('warning')
+    logging.error('error')
 
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
