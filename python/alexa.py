@@ -20,6 +20,11 @@ mode_mapping = {
 }
 
 
+@app.route('/hello')
+def hello_world():
+    return 'Hello World!'
+
+
 @ask.launch
 def launch():
     speech_text = 'Welcome to Raspberry Pi Automation.'
