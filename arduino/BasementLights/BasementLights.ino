@@ -1,12 +1,18 @@
-#define SOLID -1
-#define OFF -2
+#define SOLID_MODE -1
+#define OFF_MODE -2
+#define COLOR CRGB
 
-int bluePin = 2;
-int greenPin = 3;
+#include "FastLED.h"
+
+#define NUM_LEDS 32
+#define DATA_PIN 3
+#define CLOCK_PIN 13
+
+CRGB ledStrip[NUM_LEDS];
+
+CRGB OFF = CRGB(0, 0, 0);
+
 int yellowPin = 4;
-
-int blueState = LOW;
-int greenState = LOW;
 
 bool initialized = false;
 
@@ -40,13 +46,13 @@ int modeRepeat[] = {
 
 // the number of iterations for one complete execution of the mode
 int modeLoops[] = {
-  4, //binaryCount
+  32, //binaryCount
   2, //alternate
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
-  1000, //binaryCount
+  333, //binaryCount
   1000, //alternate
 };
 
@@ -59,18 +65,25 @@ String modeCommands[] = {
 int NUM_MODES = 2;
 
 // mode state
-int mode = SOLID;
+int mode = SOLID_MODE;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
 
+
+// misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
+COLOR savedColor;
+
 void setup() {
-  pinMode(bluePin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
+
+  FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN, GRB>(ledStrip, NUM_LEDS);
+  FastLED.setBrightness(20);
+  
   pinMode(yellowPin, OUTPUT);
   Serial.begin(9600);
 
   randomSeed(analogRead(0) * millis());
+  reset();
 }
 
 int value = 0;
@@ -102,8 +115,8 @@ void loop() {
           }
         }
       }
-      reset();
     }
+    reset();
   }
   else if (mode >= 0 && mode < NUM_MODES) {
     // a mode was explicitly selected, so just run the inner loop repeatedly
@@ -130,6 +143,13 @@ void initialize() {
   
   String data = Serial.readStringUntil('\n');
   Serial.println("INITIALIZED");
+
+  if (mode == SOLID_MODE) {
+    solid();
+  }
+  else if (mode == OFF_MODE) {
+    off();
+  }
   initialized = true;
   digitalWrite(yellowPin, LOW);
 }
@@ -140,19 +160,32 @@ boolean checkCommand() {
 
     if (data.equals("SOLID")) {
       solid();
-      mode = SOLID;
+      mode = SOLID_MODE;
       autoCycle = false;
       return true;
     }
     else if (data.equals("OFF")) {
       off();
-      mode = OFF;
+      mode = OFF_MODE;
       autoCycle = false;
       return true;
     }
     else if (data.equals("AUTOCYCLE_ON")) {
       autoCycle = true;
       mode = random(0, NUM_MODES);
+      off();
+      return true;
+    }
+    if (data.equals("BLUE")) {
+      solid(getColorRGB(0, 0, 255));
+      mode = SOLID_MODE;
+      autoCycle = false;
+      return true;
+    }
+    if (data.equals("RED")) {
+      solid(getColorRGB(255, 0, 0));
+      mode = SOLID_MODE;
+      autoCycle = false;
       return true;
     }
     else {
@@ -160,8 +193,8 @@ boolean checkCommand() {
         if (data.equals(modeCommands[m])) {
           mode = m;
           autoCycle = false;
+          off();
           return true;
-          break;
         }
       }
     }
@@ -171,26 +204,123 @@ boolean checkCommand() {
 }
 
 void reset() {
-  digitalWrite(bluePin, LOW);
-  digitalWrite(greenPin, LOW);
+  turnOff();
 }
 
 void solid() {
-  digitalWrite(bluePin, HIGH);
-  digitalWrite(greenPin, HIGH);
+  COLOR color = randomColor();
+  setStripColor(color);
+}
+
+void solid(COLOR color) {
+  setStripColor(color);
 }
 
 void off() {
-  reset();
+  turnOff();
 }
 
 void binaryCount() {
-  digitalWrite(bluePin, modeLoopNumber % 2);
-  digitalWrite(greenPin, (modeLoopNumber / 2) % 2);
+
+  if (modeLoopNumber == 0) {
+    savedColor = randomColor();
+  }
+
+  int v = modeLoopNumber;
+
+  for (int i = 0; i < 5; i++) { //goes up to 2 ^ n
+    setPixelColor(i, v % 2 == 0 ? OFF : savedColor);
+    v = v / 2;
+  }
+
+  show();
 }
 
 void alternate() {
-  digitalWrite(bluePin, modeLoopNumber % 2);
-  digitalWrite(greenPin, 1 - (modeLoopNumber % 2));
+
+  if (modeLoopNumber == 0) {
+    savedColor = randomColor();
+  }
+
+  setPixelColor(0, modeLoopNumber % 2 ? OFF : savedColor);
+  setPixelColor(1, modeLoopNumber % 2 ? savedColor : OFF);
+  show();
 }
+
+void setStripColor(COLOR color) {
+  setStripColor(color, 0, NUM_LEDS);
+}
+
+void setStripColor(COLOR color, byte start, byte count) {
+  for (int i = 0; i < count; i++) {
+    setPixelColor(i + start, color);
+  }
+  show();
+}
+
+void turnOff() {
+  setStripColor(OFF, 0, NUM_LEDS);
+}
+
+void turnOff(byte start, byte count) {
+  setStripColor(OFF, start, count);
+}
+
+COLOR getColor(int val) {
+  byte r, g, b;
+  
+  switch(val / 128)
+  {
+    case 0:
+      r = 255 - (val % 128) * 2;   //Red down
+      g = (val % 128) * 2;      // Green up
+      b = 0;                  //blue off
+      break; 
+    case 1:
+      g = 255 - (val % 128) * 2;  //green down
+      b = (val % 128) * 2;      //blue up
+      r = 0;                  //red off
+      break; 
+    case 2:
+      b = 255 - (val % 128) * 2;  //blue down 
+      r = (val % 128) * 2;      //red up
+      g = 0;                  //green off
+      break; 
+  }
+  
+  return getColorRGB(r, g, b);
+}
+
+COLOR randomColor() {
+  int r = random(0, 384);
+  return getColor(r);
+}
+
+COLOR getColorRGB(int r, int g, int b) {
+
+//  r = r * brightness / 255;
+//  g = g * brightness / 255;
+//  b = b * brightness / 255;
+//  return strip.Color(r, g, b);
+  
+  return COLOR(r, g, b);
+}
+
+void setPixelColor(int pixel, COLOR color) {
+  ledStrip[pixel] = color;
+}
+
+void setPixelColor(int pixel, COLOR color, boolean update) {
+  setPixelColor(pixel, color);
+
+  if (update) {
+    show();
+  }
+}
+
+void show() {
+//  strip.show();
+  FastLED.show();
+}
+
 
