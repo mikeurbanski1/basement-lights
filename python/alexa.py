@@ -31,7 +31,7 @@ def setup_serial():
         try_port = ports[0]
         if try_port != port:
             logger.info(f'Setting port to {try_port}')
-            port = try_port
+            port = os.path.join('/dev/', try_port)
 
             ser = serial.Serial(port, 9600, timeout=1)
             ser.flush()
