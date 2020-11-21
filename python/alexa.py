@@ -75,15 +75,18 @@ def set_lights(status, room):
     logger.info(status)
 
     if status.lower() == 'off':
-        send_command('OFF')
+        ret = send_command('OFF')
     elif status.lower() == 'solid':
-        send_command('SOLID')
+        ret = send_command('SOLID')
     elif status.lower() == 'on':
-        send_command('SOLID')
+        ret = send_command('SOLID')
     else:
         return statement(f'I did not recognize the status {status}')
 
-    return statement(f'I set the lights to {status}')
+    if ret:
+        return statement(f'I set the lights to {status}')
+    else:
+        return statement('It seems that Arduino is not connected')
 
 
 @ask.intent('ModeIntent', mapping={'mode': 'mode'})
@@ -91,8 +94,10 @@ def set_mode(mode, room):
     logger.info(mode)
     mode_command = mode_mapping.get(mode.lower())
     if mode_command:
-        send_command(mode_command)
-        return statement(f'I set the light mode to {mode}')
+        if send_command(mode_command):
+            return statement(f'I set the light mode to {mode}')
+        else:
+            return statement('It seems that Arduino is not connected')
     else:
         return statement(f'I did not recognize the mode named {mode}')
 
@@ -100,8 +105,10 @@ def set_mode(mode, room):
 @ask.intent('ColorIntent', mapping={'color': 'color'})
 def set_color(color, room):
     logger.info(color)
-    send_command(color.upper())
-    return statement(f'I set the color to {color}')
+    if send_command(color.upper()):
+        return statement(f'I set the color to {color}')
+    else:
+        return statement('It seems that Arduino is not connected')
 
 
 @ask.intent('AMAZON.HelpIntent')
@@ -117,8 +124,13 @@ def session_ended():
 
 def send_command(command):
     logger.info(f'Sending command: "{command}"')
-    # ser.write((command + '\n').encode('utf-8'))
-    # ser.flush()
+    if not port:
+        logger.error('Serial is not connected')
+        return False
+    else:
+        ser.write((command + '\n').encode('utf-8'))
+        ser.flush()
+        return True
 
 
 if __name__ == '__main__':

@@ -90,7 +90,7 @@ int value = 0;
 
 void loop() {
 
-  if (!initialized) {
+/*  if (!initialized) {
     int initLoopCount = 0;
     while (Serial.available() == 0) {
       digitalWrite(yellowPin, initLoopCount % 2);
@@ -101,6 +101,7 @@ void loop() {
     initialize();
     delay(10);
   }
+*/
 
   if (autoCycle) {
     for (mode = 0; mode < NUM_MODES; mode++) {
