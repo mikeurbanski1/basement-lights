@@ -19,7 +19,7 @@ logger = logging.getLogger('flask_ask')
 mode_mapping = {
     'binary': 'MODE_0',
     'alternating': 'MODE_1',
-    'autocycle': 'AUTOCYCLE_ON'
+    'cycle': 'AUTOCYCLE_ON'
 }
 
 
