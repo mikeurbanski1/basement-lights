@@ -4,8 +4,9 @@ import time
 import json
 import sys
 
+time.sleep(15)  # wait for boot
+
 while True:
-    time.sleep(30)
     if os.path.exists('log.txt'):
         os.remove('log.txt')
 
