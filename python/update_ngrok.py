@@ -13,7 +13,7 @@ while True:
 
     print(f'ngrok PID: {ngrok.pid}')
 
-    time.sleep(2)
+    time.sleep(5)
 
     with open('log.txt', 'r') as fp:
         for line in fp.readlines():
