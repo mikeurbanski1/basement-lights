@@ -1,6 +1,8 @@
 import subprocess
 import os
 import time
+import json
+import sys
 
 if os.path.exists('log.txt'):
     os.remove('log.txt')
@@ -19,4 +21,29 @@ with open('log.txt', 'r') as fp:
             print(f'ngrok URL: {url}')
             break
 
+get_manifest = subprocess.Popen(['ask', 'smapi', 'get-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+stdout, stderr = get_manifest.communicate()
+
+if stderr:
+    print('Got stderr output while getting manifest', file=sys.stderr)
+    print(stderr, file=sys.stderr)
+    ngrok.kill()
+    exit(1)
+
+manifest_config = json.loads(stdout)
+
+print(manifest_config)
+
+manifest_config['manifest']['apis']['custom']['endpoint']['uri'] = url
+
+print(manifest_config)
+
+update_manifest = subprocess.Popen(['ask', 'smapi', 'get-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development', '--manifest', json.dumps(manifest_config)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+stdout, stderr = update_manifest.communicate()
+
+if stderr:
+    print('Got stderr output while updating manifest', file=sys.stderr)
+    print(stderr, file=sys.stderr)
+
+print(stdout)
