@@ -1,0 +1,10 @@
+[Unit]
+Description=Run ngrok service
+
+[Service]
+ExecStart=python3 /home/hello/basement-lights/python/update_ngrok.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=update_ngrok
+User=hello
