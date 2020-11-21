@@ -9,3 +9,6 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=alexa_listener
 User=hello
+
+[Install]
+WantedBy=multi-user.target

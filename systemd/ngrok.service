@@ -8,3 +8,6 @@ StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=update_ngrok
 User=hello
+
+[Install]
+WantedBy=multi-user.target
