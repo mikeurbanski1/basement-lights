@@ -38,10 +38,10 @@ def setup_serial():
 
             logger.info(f'Sleeping for 5 seconds while arduino boots')
             time.sleep(5)
-            print('Sending initialization message')
-            send_command('init')
-            time.sleep(0.1)
-            print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+            # print('Sending initialization message')
+            # send_command('init')
+            # time.sleep(0.1)
+            # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
     else:
         if port:
             logger.info('Setting port to None')
