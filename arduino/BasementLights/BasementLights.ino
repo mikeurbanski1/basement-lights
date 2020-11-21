@@ -74,17 +74,19 @@ int modeLoopNumber = 0; // the current count of the inner loop for one cycle of 
 
 // colors
 
+int NUM_COLORS = 3;
+
 String colorNames[] = {
   "RED",
   "BLUE",
   "GREEN"
-}
+};
 
 COLOR colors[] = {
   getColorRGB(255, 0, 0),
   getColorRGB(0, 0, 255),
   getColorRGB(0, 255, 0)
-}
+};
 
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
@@ -222,7 +224,7 @@ boolean checkCommand() {
           return true;
         }
       }
-      
+
       // check for a matching color
       for (int m = 0; m < NUM_COLORS; m++) {
         if (data.equals(colorNames[m])) {
