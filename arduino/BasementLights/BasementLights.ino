@@ -16,6 +16,8 @@ int yellowPin = 4;
 
 bool initialized = false;
 
+COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
+
 /*
  * How to add a mode:
  * 
@@ -70,6 +72,19 @@ boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
 
+// colors
+
+String colorNames[] = {
+  "RED",
+  "BLUE",
+  "GREEN"
+}
+
+COLOR colors[] = {
+  getColorRGB(255, 0, 0),
+  getColorRGB(0, 0, 255),
+  getColorRGB(0, 255, 0)
+}
 
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
@@ -167,6 +182,24 @@ boolean checkCommand() {
       autoCycle = false;
       return true;
     }
+    else if (data.equals("INIT")) {
+      // Indicate that the  command was sent, then reset in the current state
+      off();
+      delay(500);
+      solid(getColorRGB(255, 255, 0));
+      delay(500);
+      off();
+      delay(500);
+      solid(getColorRGB(255, 255, 0));
+      delay(500);
+      off();
+      delay(500);
+      solid(getColorRGB(255, 255, 0));
+      delay(500);
+      off();
+      delay(500);
+      return true;
+    }
     else if (data.equals("OFF")) {
       off();
       mode = OFF_MODE;
@@ -179,24 +212,23 @@ boolean checkCommand() {
       off();
       return true;
     }
-    if (data.equals("BLUE")) {
-      solid(getColorRGB(0, 0, 255));
-      mode = SOLID_MODE;
-      autoCycle = false;
-      return true;
-    }
-    if (data.equals("RED")) {
-      solid(getColorRGB(255, 0, 0));
-      mode = SOLID_MODE;
-      autoCycle = false;
-      return true;
-    }
     else {
+      // check for a matching mode
       for (int m = 0; m < NUM_MODES; m++) {
         if (data.equals(modeCommands[m])) {
           mode = m;
           autoCycle = false;
           off();
+          return true;
+        }
+      }
+      
+      // check for a matching color
+      for (int m = 0; m < NUM_COLORS; m++) {
+        if (data.equals(colorNames[m])) {
+          solid(colors[m]);
+          mode = SOLID_MODE;
+          autoCycle = false;
           return true;
         }
       }

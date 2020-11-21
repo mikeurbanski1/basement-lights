@@ -61,8 +61,10 @@ port_monitor.start()
 
 @app.route('/hello')
 def hello_world():
-    logger.info(port)
-    return 'Hello World!'
+    if send_command('INIT'):
+        return 'Sent INIT command'
+    else:
+        return 'Arduino was not connected'
 
 
 @ask.launch
