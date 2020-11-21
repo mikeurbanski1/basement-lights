@@ -1,3 +1,8 @@
 .idea
 arduino/BasementLights/build/
 venv
+cert.pem
+key.pem
+__pycache__
+.well-known
+smapi.json

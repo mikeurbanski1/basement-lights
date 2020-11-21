@@ -20,6 +20,12 @@ mode_mapping = {
 }
 
 
+@app.route('/hello')
+def hello_world():
+    logger.info(port)
+    return 'Hello World!'
+
+
 @ask.launch
 def launch():
     speech_text = 'Welcome to Raspberry Pi Automation.'
@@ -73,27 +79,32 @@ def session_ended():
 
 def send_command(command):
     logger.info(f'Sending command: "{command}"')
-    ser.write((command + '\n').encode('utf-8'))
-    ser.flush()
+    # ser.write((command + '\n').encode('utf-8'))
+    # ser.flush()
 
 
 if __name__ == '__main__':
 
-    ser = serial.Serial(port, 9600, timeout=1)
-    ser.flush()
+    # ser = serial.Serial(port, 9600, timeout=1)
+    # ser.flush()
+    #
+    # logger.info(f'Sleeping for 5 seconds while arduino boots')
+    # time.sleep(5)
+    # print('Sending initialization message')
+    # send_command('init')
+    # time.sleep(0.1)
+    # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
 
-    logger.info(f'Sleeping for 5 seconds while arduino boots')
-    time.sleep(5)
-    print('Sending initialization message')
-    send_command('init')
-    time.sleep(0.1)
-    print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+    logger.debug('debug')
+    logger.info('info')
+    logger.warning('warning')
+    logger.error('error')
 
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
             app.config['ASK_VERIFY_REQUESTS'] = False
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=7626, ssl_context=('cert.pem', 'key.pem'))
 
 
 
