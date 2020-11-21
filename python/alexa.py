@@ -55,7 +55,8 @@ def port_monitor():
         time.sleep(5)
 
 
-port_monitor = threading.Thread(target=port_monitor(), name='PortMonitorThread', daemon=True)
+port_monitor = threading.Thread(target=port_monitor, name='PortMonitorThread', daemon=True)
+port_monitor.start()
 
 
 @app.route('/hello')
