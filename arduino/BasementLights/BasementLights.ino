@@ -84,6 +84,8 @@ void setup() {
 
   randomSeed(analogRead(0) * millis());
   reset();
+
+  initialize();
 }
 
 int value = 0;
