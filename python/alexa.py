@@ -5,19 +5,57 @@ import time
 from flask import Flask
 from flask_ask import Ask, request, session, question, statement
 
+import threading
+
+port = None
+ser = None
+
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 logger = logging.getLogger('flask_ask')
 
-port = os.environ.get('COM_PORT', '/dev/ttyACM0')
-
 mode_mapping = {
     'binary': 'MODE_0',
     'alternating': 'MODE_1',
     'autocycle': 'AUTOCYCLE_ON'
 }
+
+
+def setup_serial():
+    global port
+    global ser
+    ports = [a for a in os.listdir('/dev') if 'ttyACM' in a]
+    if ports:
+        try_port = ports[0]
+        if try_port != port:
+            logger.info(f'Setting port to {try_port}')
+            port = try_port
+
+            ser = serial.Serial(port, 9600, timeout=1)
+            ser.flush()
+
+            logger.info(f'Sleeping for 5 seconds while arduino boots')
+            time.sleep(5)
+            print('Sending initialization message')
+            send_command('init')
+            time.sleep(0.1)
+            print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
+    else:
+        if port:
+            logger.info('Setting port to None')
+            port = None
+
+
+def port_monitor():
+    logger.info('Started port monitor thread')
+    while True:
+        setup_serial()
+        time.sleep(5)
+
+
+port_monitor = threading.Thread(target=port_monitor(), name='PortMonitorThread', daemon=True)
 
 
 @app.route('/hello')
@@ -84,17 +122,6 @@ def send_command(command):
 
 
 if __name__ == '__main__':
-
-    # ser = serial.Serial(port, 9600, timeout=1)
-    # ser.flush()
-    #
-    # logger.info(f'Sleeping for 5 seconds while arduino boots')
-    # time.sleep(5)
-    # print('Sending initialization message')
-    # send_command('init')
-    # time.sleep(0.1)
-    # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
-
     logger.debug('debug')
     logger.info('info')
     logger.warning('warning')
