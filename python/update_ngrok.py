@@ -5,6 +5,7 @@ import json
 import sys
 
 while True:
+    time.sleep(30)
     if os.path.exists('log.txt'):
         os.remove('log.txt')
 
