@@ -47,3 +47,8 @@ if stderr:
     print(stderr, file=sys.stderr)
 
 print(stdout)
+
+print('Sleeping for 60 seconds')
+time.sleep(60)
+print('Killing ngrok')
+ngrok.kill()
