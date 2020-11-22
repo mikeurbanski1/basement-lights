@@ -29,6 +29,9 @@ while True:
 
     url = url.rstrip()
 
+    with open('url.txt', 'w') as fp:
+        fp.write(url)
+
     get_manifest = subprocess.Popen(['ask', 'smapi', 'get-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     stdout, stderr = get_manifest.communicate()
