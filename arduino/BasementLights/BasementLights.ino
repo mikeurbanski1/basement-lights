@@ -160,7 +160,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  randomSeed(analogRead(0) * millis());
+  randomSeed(analogRead(0));
   reset();
 
   initialize();
