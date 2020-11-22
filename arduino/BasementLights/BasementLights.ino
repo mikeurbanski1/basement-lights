@@ -230,7 +230,7 @@ boolean checkCommand() {
       autoCycle = false;
       return true;
     }
-    else if (data.equals("INCREASE_BRIGHTNESS")) {
+    else if (data.equals("DECREASE_BRIGHTNESS")) {
       brightness -= 25;
       if (brightness < 1) {
         brightness = 1;
@@ -242,7 +242,7 @@ boolean checkCommand() {
       }
       return false; // don't interrupt the flow
     }
-    else if (data.equals("DECREASE_BRIGHTNESS")) {
+    else if (data.equals("INCREASE_BRIGHTNESS")) {
       brightness += 25;
       if (brightness > 255) {
         brightness = 255;
