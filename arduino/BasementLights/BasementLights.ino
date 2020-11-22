@@ -35,37 +35,43 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 // mode definition
 void binaryCount();
 void alternate();
+void progressiveRainbow();
 
 void (*modes[])() = {
   binaryCount,
-  alternate
+  alternate,
+  progressiveRainbow
 };
 
 // the number of times the mode should be repeated
 int modeRepeat[] = {
-  4, //binaryCount
-  8, //alternate
+  2, //binaryCount
+  4, //alternate
+  1 //progressiveRainbow
 };
 
 // the number of iterations for one complete execution of the mode
 int modeLoops[] = {
   32, //binaryCount
   2, //alternate
+  400 //progressiveRainbow
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
   333, //binaryCount
-  1000, //alternate
+  20, //alternate
+  50 //progressiveRainbow
 };
 
 // placeholders to accept mode commands
 String modeCommands[] = {
   "MODE_0",
-  "MODE_1"
+  "MODE_1",
+  "MODE_2"
 };
 
-int NUM_MODES = 2;
+int NUM_MODES = 3;
 
 // mode state
 int mode = SOLID_MODE;
@@ -108,6 +114,7 @@ COLOR currentColor;
 
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
+int savedInt;
 
 void setup() {
 
@@ -302,28 +309,6 @@ void setBrightness() {
   }
 }
 
-int rainbowStart;
-
-void rainbow() {
-  rainbow(true);
-}
-
-void rainbow(boolean newColor) {
-  if (newColor) {
-    rainbowStart = random(0, 384);
-  }
-  int step = 384 / NUM_LEDS;
-  int curColor = rainbowStart;
-  for (int led = 0; led < NUM_LEDS; led++) {
-    setPixelColor(led, getColor(curColor));
-    curColor += step;
-    if (curColor >= 384) {
-      curColor -= 384;
-    }
-  }
-  show();
-}
-
 void reset() {
   turnOff();
 }
@@ -367,6 +352,51 @@ void alternate() {
 
   setPixelColor(0, modeLoopNumber % 2 ? OFF : savedColor);
   setPixelColor(1, modeLoopNumber % 2 ? savedColor : OFF);
+  show();
+}
+
+void progressiveRainbow() {
+  if (modeLoopNumber == 0) {
+    savedInt = random(0, 384); // rainbow starting color
+  }
+  int startLed = modeLoopNumber % NUM_LEDS;
+  int step = 384 / NUM_LEDS;
+  int curColor = savedInt;
+
+  for (int cnt = 0; cnt < NUM_LEDS; cnt++) {
+    int led = cnt + startLed;
+    if (led >= NUM_LEDS) {
+      led -= NUM_LEDS;
+    }
+    setPixelColor(led, getColor(curColor));
+    curColor += step;
+    if (curColor >= 384) {
+      curColor -= 384;
+    }
+  }
+
+  show();
+}
+
+int rainbowStart;
+
+void rainbow() {
+  rainbow(true);
+}
+
+void rainbow(boolean newColor) {
+  if (newColor) {
+    rainbowStart = random(0, 384);
+  }
+  int step = 384 / NUM_LEDS;
+  int curColor = rainbowStart;
+  for (int led = 0; led < NUM_LEDS; led++) {
+    setPixelColor(led, getColor(curColor));
+    curColor += step;
+    if (curColor >= 384) {
+      curColor -= 384;
+    }
+  }
   show();
 }
 
