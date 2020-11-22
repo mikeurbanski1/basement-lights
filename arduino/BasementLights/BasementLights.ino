@@ -440,7 +440,7 @@ void starryNight() {
   // we'll pick a random LED; if it's the background color, set it to a random color; otherwise, reset its color
   int led = random(0, NUM_LEDS);
   if (ledColors[led] == savedColor) {
-    COLOR c = randomColor()
+    COLOR c = randomColor();
     setPixelColor(led, randomColor(), true);
     ledColors[led] = c;
   }
