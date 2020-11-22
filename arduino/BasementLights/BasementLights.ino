@@ -82,9 +82,10 @@ String colorNames[] = {
   "GREEN",
   "WHITE",
   "PINK",
-  "ORANGE",
+  "YELLOW",
   "PURPLE",
-  "CYAN"
+  "CYAN",
+  "ORANGE"
 };
 
 COLOR colors[] = {
@@ -93,9 +94,10 @@ COLOR colors[] = {
   getColorRGB(0, 255, 0), //green
   getColorRGB(255, 255, 255), //white
   getColorRGB(255, 20, 147), //pink
-  getColorRGB(255, 255, 0), //orange
+  getColorRGB(255, 255, 0), //yellow
   getColorRGB(128, 0, 128), //purple
-  getColorRGB(0, 255, 255) //cyan
+  getColorRGB(0, 255, 255), //cyan
+  getColorRGB(255, 100, 0) //orange
 };
 
 // The current color, if a solid mode. Undefined if the mode is not currently solid.
