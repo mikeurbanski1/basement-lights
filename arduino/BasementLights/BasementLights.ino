@@ -90,7 +90,7 @@ String modeCommands[] = {
 int NUM_MODES = 6;
 
 // mode state
-int mode = 3;
+int mode = 2;
 boolean autoCycle = true;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -404,7 +404,7 @@ void progressiveSolid() {
   }
   COLOR color = getColor(savedInt);
   setStripColor(color);
-  savedInt += 2; // step size for next color
+  savedInt += 1; // step size for next color
   if (savedInt >= 384) {
     savedInt -= 384;
   }
