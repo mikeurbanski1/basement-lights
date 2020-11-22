@@ -87,7 +87,8 @@ def set_lights(status, room):
         return statement(f'I did not recognize the status {status}')
 
     if ret:
-        return statement(f'I set the lights to {status}')
+        # return statement(f'I set the lights to {status}')
+        return statement('ok')
     else:
         return statement('It seems that Arduino is not connected')
 
@@ -98,7 +99,8 @@ def set_mode(mode, room):
     mode_command = mode_mapping.get(mode.lower())
     if mode_command:
         if send_command(mode_command):
-            return statement(f'I set the light mode to {mode}')
+            # return statement(f'I set the light mode to {mode}')
+            return statement('ok')
         else:
             return statement('It seems that Arduino is not connected')
     else:
@@ -109,7 +111,9 @@ def set_mode(mode, room):
 def set_color(color, room):
     logger.info(color)
     if send_command(color.upper()):
-        return statement(f'I set the color to {color}')
+        return '{}', 200
+        # return statement(f'I set the color to {color}')
+        # return statement('ok')
     else:
         return statement('It seems that Arduino is not connected')
 
