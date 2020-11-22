@@ -6,3 +6,4 @@ key.pem
 __pycache__
 .well-known
 smapi.json
+log.txt
