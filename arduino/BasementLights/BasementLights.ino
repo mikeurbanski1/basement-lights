@@ -394,7 +394,7 @@ void progressiveSolid() {
   }
   COLOR color = getColor(savedInt);
   setStripColor(color);
-  savedInt += 10; // step size for next color
+  savedInt += 2; // step size for next color
   if (savedInt >= 384) {
     savedInt -= 384;
   }
