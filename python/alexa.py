@@ -22,6 +22,9 @@ mode_names = [
     'progressive rainbow fast',
     'progressive solid fast',
     'starry night',
+    'breathing',
+    'breathing rainbow',
+    'breathing solid'
 ]
 
 mode_mapping = {}
@@ -54,13 +57,6 @@ def setup_serial():
 
             ser = serial.Serial(port, 9600, timeout=1)
             ser.flush()
-
-            logger.info(f'Sleeping for 5 seconds while arduino boots')
-            time.sleep(5)
-            # print('Sending initialization message')
-            # send_command('init')
-            # time.sleep(0.1)
-            # print(f'Response: "{ser.readline().decode("utf-8").rstrip()}"')
     else:
         if port:
             logger.info('Setting port to None')

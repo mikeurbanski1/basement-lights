@@ -13,10 +13,6 @@ CRGB ledStrip[NUM_LEDS];
 
 CRGB OFF = CRGB(0, 0, 0);
 
-int yellowPin = 4;
-
-bool initialized = false;
-
 COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 
 /*
@@ -37,13 +33,19 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 void progressiveRainbow();
 void progressiveSolid();
 void starryNight();
+void breathing();
+void breathingRainbow();
+void breathingSolid();
 
 void (*modes[])() = {
   progressiveRainbow,
   progressiveSolid,
   progressiveRainbow,
   progressiveSolid,
-  starryNight
+  starryNight,
+  breathing,
+  breathingRainbow,
+  breathingSolid
 };
 
 // the number of times the mode should be repeated
@@ -52,7 +54,10 @@ int modeRepeat[] = {
   1, //progressiveSolid
   1, //progressiveRainbow fast
   1, //progressiveSolid fast
-  1 //starryNight
+  1, //starryNight
+  10, //breathing
+  10, //breathingRainbow
+  10 //breathingSolid
 };
 
 // the number of iterations for one complete execution of the mode
@@ -62,6 +67,9 @@ int modeLoops[] = {
   384, //progressiveRainbow fast
   384, //progressiveSolid fast
   500 //starryNight
+  2, //breathing - the breathing ones will use two loops - one to "inhale", one to "exhale"
+  2, //breathingRainbow
+  2 //breathingSolid
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
@@ -71,6 +79,9 @@ int modeLoopDelay[] = {
   100, //progressiveRainbow fast
   100, //progressiveSolid fast
   50 //starryNight
+  1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
+  1000, //breathingRainbow
+  1000 //breathingSolid
 };
 
 boolean autocycleSkip[] = {
@@ -79,6 +90,9 @@ boolean autocycleSkip[] = {
   true,
   true,
   false
+  false,
+  true,
+  true
 };
 
 // placeholders to accept mode commands
@@ -87,14 +101,17 @@ String modeCommands[] = {
   "MODE_1",
   "MODE_2",
   "MODE_3",
-  "MODE_4"
+  "MODE_4",
+  "MODE_5",
+  "MODE_6",
+  "MODE_7"
 };
 
-int NUM_MODES = 5;
+int NUM_MODES = 8;
 
 // mode state
-int mode = 4;
-boolean autoCycle = true;
+int mode = 7;
+boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
 
@@ -140,8 +157,7 @@ void setup() {
 
   FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN, GRB>(ledStrip, NUM_LEDS);
   FastLED.setBrightness(brightness);
-  
-  pinMode(yellowPin, OUTPUT);
+
   Serial.begin(9600);
 
   randomSeed(analogRead(0) * millis());
@@ -153,19 +169,6 @@ void setup() {
 int value = 0;
 
 void loop() {
-
-/*  if (!initialized) {
-    int initLoopCount = 0;
-    while (Serial.available() == 0) {
-      digitalWrite(yellowPin, initLoopCount % 2);
-      initLoopCount = 1 - initLoopCount;
-      delay(200);
-    }
-
-    initialize();
-    delay(10);
-  }
-*/
 
   if (autoCycle) {
     while (true) {
@@ -189,13 +192,16 @@ void loop() {
   }
   else if (mode >= 0 && mode < NUM_MODES) {
     // a mode was explicitly selected, so just run the inner loop repeatedly
-    for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
-      modes[mode]();
-      delay(modeLoopDelay[mode]);
-
-      if (checkCommand()) {
-        return;
+    modeIterationNumber = 0;
+    while (true) {
+      for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
+        modes[mode]();
+        delay(modeLoopDelay[mode]);
+        if (checkCommand()) {
+          return;
+        }
       }
+      modeIterationNumber++;
     }
   }
   else {
@@ -209,9 +215,6 @@ void loop() {
 void initialize() {
 
 //  firstOfOuterMode = true;
-  
-  String data = Serial.readStringUntil('\n');
-  Serial.println("INITIALIZED");
 
   if (mode == SOLID_MODE) {
     solid();
@@ -219,8 +222,6 @@ void initialize() {
   else if (mode == OFF_MODE) {
     off();
   }
-  initialized = true;
-  digitalWrite(yellowPin, LOW);
 }
 
 boolean checkCommand() {
@@ -413,6 +414,42 @@ void progressiveSolid() {
     savedInt -= 384;
   }
 }
+
+void breathingSolid() {
+  if (modeIterationNumber == 0) { // pick one color and repeat it until the mode changes
+    savedColor = randomColor();
+    savedInt = brightness
+  }
+
+  int duration = 2000; //length of time a breath should last (ms)
+  int steps = min(brightness, 40);
+  int stepSize = brightness / steps;
+  int stepDelay = duration / steps;
+
+  if (modeLoopNumber == 0) {
+    //exhale - go from go from current brightness to off
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(brightness - (step * stepSize));
+      setStripColor(color);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
+      delay(stepDelay);
+    }
+    off();
+  }
+  else {
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(step * stepSize);
+      setStripColor(color);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
+      delay(stepDelay);
+    }
+    setStripColor(color);
+  }
+  //end the loop with the strip solid and brightness fully reset
+}
+
+void breathing() {}
+void breathingRainbow() {}
 
 void starryNight() {
   if (modeLoopNumber == 0) {
