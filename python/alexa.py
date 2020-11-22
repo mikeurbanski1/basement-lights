@@ -111,9 +111,8 @@ def set_mode(mode, room):
 def set_color(color, room):
     logger.info(color)
     if send_command(color.upper()):
-        return '{}', 200
         # return statement(f'I set the color to {color}')
-        # return statement('ok')
+        return statement('ok')
     else:
         return statement('It seems that Arduino is not connected')
 
@@ -141,11 +140,6 @@ def send_command(command):
 
 
 if __name__ == '__main__':
-    logger.debug('debug')
-    logger.info('info')
-    logger.warning('warning')
-    logger.error('error')
-
     if 'ASK_VERIFY_REQUESTS' in os.environ:
         verify = str(os.environ.get('ASK_VERIFY_REQUESTS', '')).lower()
         if verify == 'false':
