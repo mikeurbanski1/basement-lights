@@ -316,9 +316,9 @@ void rainbow(boolean newColor) {
   int curColor = rainbowStart;
   for (int led = 0; led < NUM_LEDS; led++) {
     setPixelColor(led, getColor(curColor));
-    color += step;
-    if (color >= 384) {
-      color -= 384;
+    curColor += step;
+    if (curColor >= 384) {
+      curColor -= 384;
     }
   }
   show();
