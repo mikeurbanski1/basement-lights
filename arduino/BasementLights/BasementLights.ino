@@ -88,6 +88,9 @@ COLOR colors[] = {
   getColorRGB(0, 255, 0)
 };
 
+// The current color, if a solid mode. Undefined if the mode is not currently solid.
+COLOR currentColor;
+
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
 
@@ -200,6 +203,11 @@ boolean checkCommand() {
       delay(500);
       off();
       delay(500);
+
+      if (mode == SOLID_MODE) {
+        solid(currentColor);
+      }
+
       return true;
     }
     else if (data.equals("OFF")) {
@@ -246,10 +254,12 @@ void reset() {
 
 void solid() {
   COLOR color = randomColor();
+  currentColor = color;
   setStripColor(color);
 }
 
 void solid(COLOR color) {
+  currentColor = color;
   setStripColor(color);
 }
 

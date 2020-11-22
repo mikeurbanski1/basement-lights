@@ -52,7 +52,8 @@ while True:
 
     print(stdout)
 
-
+    # sent init notification
+    subprocess.Popen(['curl', f'{url}/hello'])
 
     print('Sleeping for 7 hours (25200 seconds)')
     time.sleep(25200)
