@@ -72,6 +72,8 @@ boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
 
+int brightness = 40;
+
 // colors
 
 int NUM_COLORS = 9;
@@ -109,7 +111,7 @@ COLOR savedColor;
 void setup() {
 
   FastLED.addLeds<LPD8806, DATA_PIN, CLOCK_PIN, GRB>(ledStrip, NUM_LEDS);
-  FastLED.setBrightness(20);
+  FastLED.setBrightness(brightness);
   
   pinMode(yellowPin, OUTPUT);
   Serial.begin(9600);
@@ -227,6 +229,40 @@ boolean checkCommand() {
       mode = OFF_MODE;
       autoCycle = false;
       return true;
+    }
+    else if (data.equals("INCREASE_BRIGHTNESS")) {
+      brightness -= 25;
+      if (brightness < 1) {
+        brightness = 1;
+      }
+      FastLED.setBrightness(brightness);
+      if (mode == SOLID_MODE) {
+        // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
+        solid(currentColor);
+      }
+      return false; // don't interrupt the flow
+    }
+    else if (data.equals("DECREASE_BRIGHTNESS")) {
+      brightness += 25;
+      if (brightness > 255) {
+        brightness = 255;
+      }
+      FastLED.setBrightness(brightness);
+      if (mode == SOLID_MODE) {
+        // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
+        solid(currentColor);
+      }
+      return false; // don't interrupt the flow
+    }
+    else if (data.startsWith("BRIGHTNESS")) {
+      String brightnessStr = data.substring(data.indexOf(' ') + 1)
+      brightness = brightnessStr.toInt();
+      FastLED.setBrightness(brightness);
+      if (mode == SOLID_MODE) {
+        // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
+        solid(currentColor);
+      }
+      return false; // don't interrupt the flow
     }
     else if (data.equals("AUTOCYCLE_ON")) {
       autoCycle = true;

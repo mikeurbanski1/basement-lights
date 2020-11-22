@@ -141,7 +141,19 @@ def list_modes(room):
 
 @ask.intent('BrightnessIntent')
 def list_modes(direction, brightness, room):
-    return statement(f'direction is {direction}, brightness is {brightness}')
+    if direction:
+        ret = send_command(f'{direction.upper()}_BRIGHTNESS')
+    else:
+        if brightness < 1:
+            brightness = 1
+        elif brightness > 255:
+            brightness = 255
+        ret = send_command(f'BRIGHTNESS {brightness}')
+
+    if ret:
+        return statement('ok')
+    else:
+        return statement('It seems that Arduino is not connected')
 
 
 @ask.intent('AMAZON.HelpIntent')
