@@ -425,8 +425,8 @@ void breathingSolid() {
   // and then turn it off, and it would look like a sudden jump from 10 brightness to 0. So, we'll go gracefully down to 0.
 
   int duration = 2000; //length of time a breath should last (ms)
-  int steps = min(brightness, 40);
-  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80
+  int steps = min(brightness, 40); //preliminary step count value to get us started
+  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80)
   steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
   int stepDelay = duration / steps;
   
@@ -459,10 +459,12 @@ void breathing() {
     savedColor = randomColor();
   }
 
-  int duration = 2000; //length of time a breath should last (ms)
+  // see comments in breathingSolid
+
+  int duration = 2000; 
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80
-  steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
+  int stepSize = brightness / steps; 
+  steps = brightness / stepSize; 
   int stepDelay = duration / steps;
 
   if (modeLoopNumber == 0) {
@@ -493,10 +495,12 @@ void breathingRainbow() {
     rainbow(true, false);
   }
 
-  int duration = 2000; //length of time a breath should last (ms)
+  // see comments in breathingSolid
+
+  int duration = 2000; 
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80
-  steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
+  int stepSize = brightness / steps; 
+  steps = brightness / stepSize; 
   int stepDelay = duration / steps;
 
   if (modeLoopNumber == 0) {
