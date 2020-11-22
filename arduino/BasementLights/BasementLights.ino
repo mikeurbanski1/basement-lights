@@ -418,7 +418,7 @@ void progressiveSolid() {
 void breathingSolid() {
   if (modeIterationNumber == 0) { // pick one color and repeat it until the mode changes
     savedColor = randomColor();
-    savedInt = brightness
+    savedInt = brightness;
   }
 
   int duration = 2000; //length of time a breath should last (ms)
@@ -430,7 +430,7 @@ void breathingSolid() {
     //exhale - go from go from current brightness to off
     for (int step = 0; step < steps; step++) {
       FastLED.setBrightness(brightness - (step * stepSize));
-      setStripColor(color);
+      setStripColor(savedColor);
       FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
       delay(stepDelay);
     }
@@ -439,11 +439,11 @@ void breathingSolid() {
   else {
     for (int step = 0; step < steps; step++) {
       FastLED.setBrightness(step * stepSize);
-      setStripColor(color);
+      setStripColor(savedColor);
       FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
       delay(stepDelay);
     }
-    setStripColor(color);
+    setStripColor(savedColor);
   }
   //end the loop with the strip solid and brightness fully reset
 }
