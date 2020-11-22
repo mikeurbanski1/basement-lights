@@ -5,11 +5,7 @@ import json
 import sys
 import re
 
-time.sleep(5)  # wait for boot
-
 pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
-
-url = None
 
 while True:
     if os.path.exists('log.txt'):
@@ -20,9 +16,11 @@ while True:
 
     print(f'ngrok PID: {ngrok.pid}')
 
-    time.sleep(5)
+    time.sleep(5)  # slight delay for ngrok to run
 
-    while not url:
+    url = None
+
+    while not url:  # it may start up before internet is available, so loop until we find the new entry
         with open('log.txt', 'r') as fp:
             for line in fp.readlines():
                 matches = pattern.findall(line)
