@@ -433,17 +433,20 @@ void starryNight() {
     savedColor = randomColor(); // "background" color
     setStripColor(savedColor);
     for (int i = 0; i < NUM_LEDS; i++) {
-      ledColors[i] = savedColor
+      ledColors[i] = savedColor;
     }
   }
 
   // we'll pick a random LED; if it's the background color, set it to a random color; otherwise, reset its color
   int led = random(0, NUM_LEDS);
   if (ledColors[led] == savedColor) {
-    setPixelColor(led, randomColor());
+    COLOR c = randomColor()
+    setPixelColor(led, randomColor(), true);
+    ledColors[led] = c;
   }
   else {
-    setPixelColor(led, savedColor);
+    setPixelColor(led, savedColor, true);
+    ledColors[led] = savedColor;
   }
 }
 
