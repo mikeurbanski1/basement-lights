@@ -66,7 +66,7 @@ int modeLoops[] = {
   384, //progressiveSolid
   384, //progressiveRainbow fast
   384, //progressiveSolid fast
-  500 //starryNight
+  500, //starryNight
   2, //breathing - the breathing ones will use two loops - one to "inhale", one to "exhale"
   2, //breathingRainbow
   2 //breathingSolid
@@ -78,7 +78,7 @@ int modeLoopDelay[] = {
   1000, //progressiveSolid
   100, //progressiveRainbow fast
   100, //progressiveSolid fast
-  50 //starryNight
+  50, //starryNight
   1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
   1000, //breathingRainbow
   1000 //breathingSolid
