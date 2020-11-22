@@ -21,6 +21,8 @@ mode_mapping = {
     'alternating': 'MODE_1',
     'progressive rainbow': 'MODE_2',
     'progressive solid': 'MODE_3',
+    'progressive rainbow fast': 'MODE_4',
+    'progressive solid fast': 'MODE_5',
     'cycle': 'AUTOCYCLE_ON'
 }
 

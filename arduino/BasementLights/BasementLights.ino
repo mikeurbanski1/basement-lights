@@ -42,6 +42,8 @@ void (*modes[])() = {
   binaryCount,
   alternate,
   progressiveRainbow,
+  progressiveSolid,
+  progressiveRainbow,
   progressiveSolid
 };
 
@@ -50,7 +52,9 @@ int modeRepeat[] = {
   1, //binaryCount
   4, //alternate
   1, //progressiveRainbow
-  1 //progressiveSolid
+  1, //progressiveSolid
+  1, //progressiveRainbow fast
+  1 //progressiveSolid fast
 };
 
 // the number of iterations for one complete execution of the mode
@@ -58,15 +62,19 @@ int modeLoops[] = {
   32, //binaryCount
   2, //alternate
   200, //progressiveRainbow
-  200 //progressiveSolid
+  200, //progressiveSolid
+  200, //progressiveRainbow fast
+  200 //progressiveSolid fast
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
   333, //binaryCount
   1000, //alternate
-  100, //progressiveRainbow
-  100 //progressiveSolid
+  1000, //progressiveRainbow
+  1000, //progressiveSolid
+  100, //progressiveRainbow fast
+  100 //progressiveSolid fast
 };
 
 // placeholders to accept mode commands
@@ -74,10 +82,12 @@ String modeCommands[] = {
   "MODE_0",
   "MODE_1",
   "MODE_2",
-  "MODE_3"
+  "MODE_3",
+  "MODE_4",
+  "MODE_5"
 };
 
-int NUM_MODES = 4;
+int NUM_MODES = 6;
 
 // mode state
 int mode = 3;
