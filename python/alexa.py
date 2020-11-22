@@ -119,8 +119,10 @@ def set_color(color, room):
 
 @ask.intent('AMAZON.HelpIntent')
 def help():
-    speech_text = 'You can say hello to me!'
-    return question(speech_text).reprompt(speech_text).simple_card('HelloWorld', speech_text)
+    speech_text = 'You can say: turn the light on, off, or solid; set the mode to blank; ' \
+                  'change the color to blank; set the brightness, or increase or decrease the ' \
+                  'brightness.'
+    return question(speech_text).reprompt(speech_text)
 
 
 @ask.session_ended
