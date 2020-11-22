@@ -36,45 +36,51 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 void binaryCount();
 void alternate();
 void progressiveRainbow();
+void progressiveSolid();
 
 void (*modes[])() = {
   binaryCount,
   alternate,
-  progressiveRainbow
+  progressiveRainbow,
+  progressiveSolid
 };
 
 // the number of times the mode should be repeated
 int modeRepeat[] = {
   1, //binaryCount
   4, //alternate
-  1 //progressiveRainbow
+  1, //progressiveRainbow
+  1 //progressiveSolid
 };
 
 // the number of iterations for one complete execution of the mode
 int modeLoops[] = {
   32, //binaryCount
   2, //alternate
-  200 //progressiveRainbow
+  200, //progressiveRainbow
+  200 //progressiveSolid
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
   333, //binaryCount
   1000, //alternate
-  125 //progressiveRainbow
+  100, //progressiveRainbow
+  100 //progressiveSolid
 };
 
 // placeholders to accept mode commands
 String modeCommands[] = {
   "MODE_0",
   "MODE_1",
-  "MODE_2"
+  "MODE_2",
+  "MODE_3"
 };
 
-int NUM_MODES = 3;
+int NUM_MODES = 4;
 
 // mode state
-int mode = 2;
+int mode = 3;
 boolean autoCycle = true;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -380,6 +386,18 @@ void progressiveRainbow() {
   }
 
   show();
+}
+
+void progressiveSolid() {
+  if (modeLoopNumber == 0) {
+    savedInt = random(0, 384); // starting color
+  }
+  COLOR color = getColor(savedInt);
+  setStripColor(color);
+  savedInt += 10; // step size for next color
+  if (savedInt >= 384) {
+    savedInt -= 384;
+  }
 }
 
 int rainbowStart;
