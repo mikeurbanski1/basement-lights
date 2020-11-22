@@ -46,7 +46,8 @@ void (*modes[])() = {
   progressiveRainbow,
   progressiveSolid,
   progressiveRainbow,
-  progressiveSolid
+  progressiveSolid,
+  starryNight
 };
 
 // the number of times the mode should be repeated
