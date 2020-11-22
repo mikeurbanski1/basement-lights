@@ -34,7 +34,7 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 
 // mode definition
 void binaryCount();
-void alternate()
+void alternate();
 
 void (*modes[])() = {
   binaryCount,
@@ -302,7 +302,7 @@ void setBrightness() {
   }
 }
 
-int rainbowStart
+int rainbowStart;
 
 void rainbow() {
   rainbow(true);
