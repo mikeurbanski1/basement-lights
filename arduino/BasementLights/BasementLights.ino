@@ -148,7 +148,7 @@ void loop() {
 */
 
   if (autoCycle) {
-    for (mode = 0; mode < NUM_MODES; mode++) {
+    while (true) {
       for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode]; modeIterationNumber++) {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
           modes[mode]();
@@ -159,6 +159,10 @@ void loop() {
             return;
           }
         }
+      }
+      mode++;
+      if (mode == NUM_MODES) {
+        mode = 0;
       }
       reset();
     }
