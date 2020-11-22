@@ -416,7 +416,7 @@ void progressiveSolid() {
 }
 
 void breathingSolid() {
-  if (modeIterationNumber == 0) { // pick one color and repeat it until the mode changes
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) { // pick one color and repeat it until the mode changes
     savedColor = randomColor();
     savedInt = brightness;
   }
