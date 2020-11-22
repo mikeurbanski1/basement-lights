@@ -61,10 +61,10 @@ int modeRepeat[] = {
 int modeLoops[] = {
   32, //binaryCount
   2, //alternate
-  200, //progressiveRainbow
-  200, //progressiveSolid
-  200, //progressiveRainbow fast
-  200 //progressiveSolid fast
+  384, //progressiveRainbow - these should be multiples of 384 for best results
+  384, //progressiveSolid
+  384, //progressiveRainbow fast
+  384 //progressiveSolid fast
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
