@@ -482,7 +482,7 @@ void breathing() {
 
 void breathingRainbow() {
   if (modeLoopNumber == 0) { // pick a new rainbow each breath
-    rainbow();
+    rainbow(true, false);
   }
 
   int duration = 2000; //length of time a breath should last (ms)
@@ -536,6 +536,10 @@ void rainbow() {
 }
 
 void rainbow(boolean newColor) {
+  rainbow(newColor, true)
+}
+
+void rainbow(boolean newColor, boolean update) {
   if (newColor) {
     rainbowStart = random(0, 384);
   }
@@ -548,7 +552,9 @@ void rainbow(boolean newColor) {
       curColor -= 384;
     }
   }
-  show();
+  if (update) {
+    show();
+  }
 }
 
 void setStripColor(COLOR color) {
