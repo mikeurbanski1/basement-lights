@@ -419,10 +419,17 @@ void breathingSolid() {
     savedColor = randomColor();
   }
 
+  // The idea here is to do integer math to keep it simple while adjusting for drastic jumps in brightness. We'll start with a target step 
+  // count (granularity of changes)  to be 40, which is arbitrary. Then we'll recalculate to smooth it out.
+  // For example, if brightness is 50, then step size will be 1 and # steps will be 40. So, we'd go from 50 down to 10 brightness
+  // and then turn it off, and it would look like a sudden jump from 10 brightness to 0. So, we'll go gracefully down to 0.
+
   int duration = 2000; //length of time a breath should last (ms)
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps;
+  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80
+  steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
   int stepDelay = duration / steps;
+  
 
   if (modeLoopNumber == 0) {
     // inhale - go from off up to set brightness
@@ -454,7 +461,8 @@ void breathing() {
 
   int duration = 2000; //length of time a breath should last (ms)
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps;
+  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80
+  steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
   int stepDelay = duration / steps;
 
   if (modeLoopNumber == 0) {
@@ -487,7 +495,8 @@ void breathingRainbow() {
 
   int duration = 2000; //length of time a breath should last (ms)
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps;
+  int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80
+  steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
   int stepDelay = duration / steps;
 
   if (modeLoopNumber == 0) {
@@ -631,5 +640,3 @@ void show() {
 //  strip.show();
   FastLED.show();
 }
-
-
