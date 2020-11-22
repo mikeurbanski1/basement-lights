@@ -74,7 +74,7 @@ int modeLoopNumber = 0; // the current count of the inner loop for one cycle of 
 
 // colors
 
-int NUM_COLORS = 8;
+int NUM_COLORS = 9;
 
 String colorNames[] = {
   "RED",
