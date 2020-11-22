@@ -34,15 +34,11 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
  */
 
 // mode definition
-void binaryCount();
-void alternate();
 void progressiveRainbow();
 void progressiveSolid();
 void starryNight();
 
 void (*modes[])() = {
-  binaryCount,
-  alternate,
   progressiveRainbow,
   progressiveSolid,
   progressiveRainbow,
@@ -52,8 +48,6 @@ void (*modes[])() = {
 
 // the number of times the mode should be repeated
 int modeRepeat[] = {
-  1, //binaryCount
-  4, //alternate
   1, //progressiveRainbow
   1, //progressiveSolid
   1, //progressiveRainbow fast
@@ -63,8 +57,6 @@ int modeRepeat[] = {
 
 // the number of iterations for one complete execution of the mode
 int modeLoops[] = {
-  32, //binaryCount
-  2, //alternate
   384, //progressiveRainbow - the progressive modes should be multiples of 384 for best results
   384, //progressiveSolid
   384, //progressiveRainbow fast
@@ -74,8 +66,6 @@ int modeLoops[] = {
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
-  333, //binaryCount
-  1000, //alternate
   1000, //progressiveRainbow
   1000, //progressiveSolid
   100, //progressiveRainbow fast
@@ -84,8 +74,6 @@ int modeLoopDelay[] = {
 };
 
 boolean autocycleSkip[] = {
-  false,
-  false,
   false,
   false,
   true,
@@ -99,15 +87,13 @@ String modeCommands[] = {
   "MODE_1",
   "MODE_2",
   "MODE_3",
-  "MODE_4",
-  "MODE_5",
-  "MODE_6"
+  "MODE_4"
 };
 
-int NUM_MODES = 7;
+int NUM_MODES = 5;
 
 // mode state
-int mode = 6;
+int mode = 4;
 boolean autoCycle = true;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode

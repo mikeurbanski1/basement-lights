@@ -16,16 +16,18 @@ logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 logger = logging.getLogger('flask_ask')
 
-mode_mapping = {
-    'binary': 'MODE_0',
-    'alternating': 'MODE_1',
-    'progressive rainbow': 'MODE_2',
-    'progressive solid': 'MODE_3',
-    'progressive rainbow fast': 'MODE_4',
-    'progressive solid fast': 'MODE_5',
-    'starry night': 'MODE_6',
-    'cycle': 'AUTOCYCLE_ON'
-}
+mode_names = [
+    'progressive rainbow',
+    'progressive solid',
+    'progressive rainbow',
+    'progressive solid fast',
+    'starry night',
+]
+
+mode_mapping = {}
+for mode in mode_names:
+    mode_mapping[mode] = f'MODE_{len(mode_mapping)}' # MODE_0, MODE_1, ...
+mode_mapping['cycle'] = 'AUTOCYCLE_ON'
 
 colors = [
   'RED',
