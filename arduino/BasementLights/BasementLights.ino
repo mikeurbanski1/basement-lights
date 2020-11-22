@@ -191,15 +191,15 @@ boolean checkCommand() {
       // Indicate that the  command was sent, then reset in the current state
       off();
       delay(500);
-      solid(getColorRGB(255, 255, 0));
+      setStripColor(getColorRGB(255, 255, 0));
       delay(500);
       off();
       delay(500);
-      solid(getColorRGB(255, 255, 0));
+      setStripColor(getColorRGB(255, 255, 0));
       delay(500);
       off();
       delay(500);
-      solid(getColorRGB(255, 255, 0));
+      setStripColor(getColorRGB(255, 255, 0));
       delay(500);
       off();
       delay(500);
