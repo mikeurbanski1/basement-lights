@@ -54,14 +54,14 @@ int modeRepeat[] = {
 int modeLoops[] = {
   32, //binaryCount
   2, //alternate
-  100 //progressiveRainbow
+  200 //progressiveRainbow
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
   333, //binaryCount
   1000, //alternate
-  250 //progressiveRainbow
+  125 //progressiveRainbow
 };
 
 // placeholders to accept mode commands
@@ -74,8 +74,8 @@ String modeCommands[] = {
 int NUM_MODES = 3;
 
 // mode state
-int mode = SOLID_MODE;
-boolean autoCycle = false;
+int mode = 2;
+boolean autoCycle = true;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
 
