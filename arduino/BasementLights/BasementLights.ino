@@ -91,7 +91,7 @@ boolean autocycleSkip[] = {
   true,
   true,
   false
-}
+};
 
 // placeholders to accept mode commands
 String modeCommands[] = {
