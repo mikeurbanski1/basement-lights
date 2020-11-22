@@ -138,8 +138,8 @@ void loop() {
           }
         }
       }
+      reset();
     }
-    reset();
   }
   else if (mode >= 0 && mode < NUM_MODES) {
     // a mode was explicitly selected, so just run the inner loop repeatedly
