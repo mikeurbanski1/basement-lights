@@ -22,6 +22,18 @@ mode_mapping = {
     'cycle': 'AUTOCYCLE_ON'
 }
 
+colors = [
+  'RED',
+  'BLUE',
+  'GREEN',
+  'WHITE',
+  'PINK',
+  'YELLOW',
+  'PURPLE',
+  'CYAN',
+  'ORANGE'
+]
+
 
 def setup_serial():
     global port
@@ -117,11 +129,21 @@ def set_color(color, room):
         return statement('It seems that Arduino is not connected')
 
 
+@ask.intent('ListColorsIntent')
+def list_colors(room):
+    return statement(f'Here are the colors: {", ".join(colors)}')
+
+
+@ask.intent('ListModesIntent')
+def list_modes(room):
+    return statement(f'Here are the modes: {", ".join(mode_mapping.keys())}')
+
+
 @ask.intent('AMAZON.HelpIntent')
 def help():
     speech_text = 'You can say: turn the light on, off, or solid; set the mode to blank; ' \
-                  'change the color to blank; set the brightness, or increase or decrease the ' \
-                  'brightness.'
+                  'change the color to blank; set the brightness to blank, or increase or decrease the ' \
+                  'brightness. You can also ask for a list of modes or colors.'
     return question(speech_text).reprompt(speech_text)
 
 
