@@ -1,5 +1,6 @@
 #define SOLID_MODE -1
 #define OFF_MODE -2
+#define RAINBOW_MODE -3
 #define COLOR CRGB
 
 #include "FastLED.h"
@@ -33,7 +34,7 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 
 // mode definition
 void binaryCount();
-void alternate();
+void alternate()
 
 void (*modes[])() = {
   binaryCount,
@@ -235,11 +236,7 @@ boolean checkCommand() {
       if (brightness < 1) {
         brightness = 1;
       }
-      FastLED.setBrightness(brightness);
-      if (mode == SOLID_MODE) {
-        // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
-        solid(currentColor);
-      }
+      setBrightness();
       return false; // don't interrupt the flow
     }
     else if (data.equals("INCREASE_BRIGHTNESS")) {
@@ -247,27 +244,25 @@ boolean checkCommand() {
       if (brightness > 255) {
         brightness = 255;
       }
-      FastLED.setBrightness(brightness);
-      if (mode == SOLID_MODE) {
-        // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
-        solid(currentColor);
-      }
+      setBrightness();
       return false; // don't interrupt the flow
     }
     else if (data.startsWith("BRIGHTNESS")) {
       String brightnessStr = data.substring(data.indexOf(' ') + 1);
       brightness = brightnessStr.toInt();
-      FastLED.setBrightness(brightness);
-      if (mode == SOLID_MODE) {
-        // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
-        solid(currentColor);
-      }
+      setBrightness();
       return false; // don't interrupt the flow
     }
     else if (data.equals("AUTOCYCLE_ON")) {
       autoCycle = true;
       mode = random(0, NUM_MODES);
       off();
+      return true;
+    }
+    else if (data.equals("RAINBOW")) {
+      autoCycle = false;
+      mode = RAINBOW_MODE;
+      rainbow();
       return true;
     }
     else {
@@ -294,6 +289,39 @@ boolean checkCommand() {
   }
 
   return false;
+}
+
+void setBrightness() {
+  FastLED.setBrightness(brightness);
+  if (mode == SOLID_MODE) {
+    // set the color so the brightness takes effect; otherwise it'll just take effect on the next loop
+    solid(currentColor);
+  }
+  else if (mode == RAINBOW_MODE) {
+    rainbow(false);
+  }
+}
+
+int rainbowStart
+
+void rainbow() {
+  rainbow(true);
+}
+
+void rainbow(boolean newColor) {
+  if (newColor) {
+    rainbowStart = random(0, 384);
+  }
+  int step = 384 / NUM_LEDS;
+  int curColor = rainbowStart;
+  for (int led = 0; led < NUM_LEDS; led++) {
+    setPixelColor(led, getColor(curColor));
+    color += step;
+    if (color >= 384) {
+      color -= 384;
+    }
+  }
+  show();
 }
 
 void reset() {

@@ -131,7 +131,7 @@ def set_color(color, room):
 
 @ask.intent('ListColorsIntent')
 def list_colors(room):
-    return statement(f'Here are the colors: {", ".join(colors)}')
+    return statement(f'Here are the colors: {", ".join(colors + ["rainbow"])}')
 
 
 @ask.intent('ListModesIntent')
