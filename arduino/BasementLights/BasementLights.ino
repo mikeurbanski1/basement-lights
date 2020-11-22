@@ -255,7 +255,7 @@ boolean checkCommand() {
       return false; // don't interrupt the flow
     }
     else if (data.startsWith("BRIGHTNESS")) {
-      String brightnessStr = data.substring(data.indexOf(' ') + 1)
+      String brightnessStr = data.substring(data.indexOf(' ') + 1);
       brightness = brightnessStr.toInt();
       FastLED.setBrightness(brightness);
       if (mode == SOLID_MODE) {
