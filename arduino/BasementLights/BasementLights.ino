@@ -93,7 +93,7 @@ COLOR colors[] = {
   getColorRGB(0, 0, 255), //blue
   getColorRGB(0, 255, 0), //green
   getColorRGB(255, 255, 255), //white
-  getColorRGB(255, 20, 147), //pink
+  getColorRGB(255, 20, 115), //pink
   getColorRGB(255, 255, 0), //yellow
   getColorRGB(128, 0, 128), //purple
   getColorRGB(0, 255, 255), //cyan
