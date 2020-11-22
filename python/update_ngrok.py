@@ -6,6 +6,8 @@ import sys
 
 time.sleep(15)  # wait for boot
 
+url = None
+
 while True:
     if os.path.exists('log.txt'):
         os.remove('log.txt')
@@ -24,6 +26,8 @@ while True:
                 url = line[index:]
                 print(f'ngrok URL: {url}')
                 break
+
+    url = url.rstrip()
 
     get_manifest = subprocess.Popen(['ask', 'smapi', 'get-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -52,7 +56,7 @@ while True:
 
     print(stdout)
 
-    # sent init notification
+    # send init notification
     subprocess.Popen(['curl', f'{url}/hello'])
 
     print('Sleeping for 7 hours (25200 seconds)')
