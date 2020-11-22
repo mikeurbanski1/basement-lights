@@ -19,7 +19,7 @@ logger = logging.getLogger('flask_ask')
 mode_names = [
     'progressive rainbow',
     'progressive solid',
-    'progressive rainbow',
+    'progressive rainbow fast',
     'progressive solid fast',
     'starry night',
 ]
