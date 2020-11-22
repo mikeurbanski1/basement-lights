@@ -536,7 +536,7 @@ void rainbow() {
 }
 
 void rainbow(boolean newColor) {
-  rainbow(newColor, true)
+  rainbow(newColor, true);
 }
 
 void rainbow(boolean newColor, boolean update) {
