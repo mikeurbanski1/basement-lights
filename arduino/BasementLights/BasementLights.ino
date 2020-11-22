@@ -498,7 +498,7 @@ void breathingRainbow() {
       FastLED.setBrightness(brightness); //this is just in case the mode gets reset to keep the old brightness
       delay(stepDelay);
     }
-    setStripColor(savedColor);
+    rainbow(false);
   }
   else {
     //exhale - go from go from set brightness to off
