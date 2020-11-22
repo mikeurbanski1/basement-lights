@@ -110,7 +110,7 @@ String modeCommands[] = {
 int NUM_MODES = 8;
 
 // mode state
-int mode = 5;
+int mode = 6;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -151,7 +151,6 @@ COLOR currentColor;
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
 int savedInt;
-COLOR ledColors[NUM_LEDS]; //this must be kept updated by a particular mode, if it plans to use it
 
 void setup() {
 
@@ -425,17 +424,8 @@ void breathingSolid() {
   int stepSize = brightness / steps;
   int stepDelay = duration / steps;
 
-  if (modeLoopNumber == 1) {
-    //exhale - go from go from current brightness to off
-    for (int step = 0; step < steps; step++) {
-      FastLED.setBrightness(brightness - (step * stepSize));
-      setStripColor(savedColor);
-      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
-      delay(stepDelay);
-    }
-    off();
-  }
-  else {
+  if (modeLoopNumber == 0) {
+    // inhale - go from off up to set brightness
     for (int step = 0; step < steps; step++) {
       FastLED.setBrightness(step * stepSize);
       setStripColor(savedColor);
@@ -443,6 +433,16 @@ void breathingSolid() {
       delay(stepDelay);
     }
     setStripColor(savedColor);
+  }
+  else {
+    //exhale - go from go from set brightness to off
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(brightness - (step * stepSize));
+      setStripColor(savedColor);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
+      delay(stepDelay);
+    }
+    off();
   }
   //end the loop with the strip solid and brightness fully reset
 }
@@ -457,17 +457,8 @@ void breathing() {
   int stepSize = brightness / steps;
   int stepDelay = duration / steps;
 
-  if (modeLoopNumber == 1) {
-    //exhale - go from go from current brightness to off
-    for (int step = 0; step < steps; step++) {
-      FastLED.setBrightness(brightness - (step * stepSize));
-      setStripColor(savedColor);
-      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
-      delay(stepDelay);
-    }
-    off();
-  }
-  else {
+  if (modeLoopNumber == 0) {
+    // inhale - go from off up to set brightness
     for (int step = 0; step < steps; step++) {
       FastLED.setBrightness(step * stepSize);
       setStripColor(savedColor);
@@ -476,29 +467,60 @@ void breathing() {
     }
     setStripColor(savedColor);
   }
+  else {
+    //exhale - go from go from set brightness to off
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(brightness - (step * stepSize));
+      setStripColor(savedColor);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
+      delay(stepDelay);
+    }
+    off();
+  }
   //end the loop with the strip solid and brightness fully reset
 }
-void breathingRainbow() {}
+
+void breathingRainbow() {
+  if (modeLoopNumber == 0) { // pick a new rainbow each breath
+    rainbow();
+  }
+
+  if (modeLoopNumber == 0) {
+    // inhale - go from off up to set brightness
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(step * stepSize);
+      rainbow(false);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset to keep the old brightness
+      delay(stepDelay);
+    }
+    setStripColor(savedColor);
+  }
+  else {
+    //exhale - go from go from set brightness to off
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(brightness - (step * stepSize));
+      rainbow(false);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset to keep the old brightness
+      delay(stepDelay);
+    }
+    off();
+  }
+}
 
 void starryNight() {
   if (modeLoopNumber == 0) {
     savedColor = randomColor(); // "background" color
     setStripColor(savedColor);
-    for (int i = 0; i < NUM_LEDS; i++) {
-      ledColors[i] = savedColor;
-    }
   }
 
   // we'll pick a random LED; if it's the background color, set it to a random color; otherwise, reset its color
   int led = random(0, NUM_LEDS);
-  if (ledColors[led] == savedColor) {
+  if (ledStrip[led] == savedColor) {
     COLOR c = randomColor();
     setPixelColor(led, randomColor(), true);
-    ledColors[led] = c;
   }
   else {
     setPixelColor(led, savedColor, true);
-    ledColors[led] = savedColor;
   }
 }
 
@@ -589,7 +611,6 @@ void setPixelColor(int pixel, COLOR color) {
 
 void setPixelColor(int pixel, COLOR color, boolean update) {
   setPixelColor(pixel, color);
-
   if (update) {
     show();
   }
