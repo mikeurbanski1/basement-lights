@@ -74,18 +74,32 @@ int modeLoopNumber = 0; // the current count of the inner loop for one cycle of 
 
 // colors
 
-int NUM_COLORS = 3;
+int NUM_COLORS = 10;
 
 String colorNames[] = {
   "RED",
   "BLUE",
-  "GREEN"
+  "GREEN",
+  "WHITE",
+  "CORAL",
+  "PINK",
+  "ORANGE",
+  "PURPLE",
+  "CYAN",
+  "TURQUOISE"
 };
 
 COLOR colors[] = {
-  getColorRGB(255, 0, 0),
-  getColorRGB(0, 0, 255),
-  getColorRGB(0, 255, 0)
+  getColorRGB(255, 0, 0), //red
+  getColorRGB(0, 0, 255), //blue
+  getColorRGB(0, 255, 0), //green
+  getColorRGB(255, 255, 255), //white
+  getColorRGB(240, 127, 80), //coral
+  getColorRGB(255, 20, 147), //pink
+  getColorRGB(255, 165, 0), //orange
+  getColorRGB(128, 0, 128), //purple
+  getColorRGB(0, 255, 255), //cyan
+  getColorRGB(64, 224, 208) //turquoise
 };
 
 // The current color, if a solid mode. Undefined if the mode is not currently solid.

@@ -4,7 +4,7 @@ import time
 import json
 import sys
 
-time.sleep(15)  # wait for boot
+time.sleep(5)  # wait for boot
 
 url = None
 
