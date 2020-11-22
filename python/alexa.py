@@ -139,6 +139,11 @@ def list_modes(room):
     return statement(f'Here are the modes: {", ".join(mode_mapping.keys())}')
 
 
+@ask.intent('BrightnessIntent')
+def list_modes(direction, brightness, room):
+    return statement(f'direction is {direction}, brightness is {brightness}')
+
+
 @ask.intent('AMAZON.HelpIntent')
 def help():
     speech_text = 'You can say: turn the light on, off, or solid; set the mode to blank; ' \
