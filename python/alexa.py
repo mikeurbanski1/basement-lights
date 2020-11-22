@@ -23,6 +23,7 @@ mode_mapping = {
     'progressive solid': 'MODE_3',
     'progressive rainbow fast': 'MODE_4',
     'progressive solid fast': 'MODE_5',
+    'starry night': 'MODE_6',
     'cycle': 'AUTOCYCLE_ON'
 }
 

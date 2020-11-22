@@ -30,6 +30,7 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
  * 6. Add a new entry into modeCommands
  * 7. Increment NUM_MODES
  * 8. Implement the method
+ * 9. Enter a boolean for autocycleSkip
  */
 
 // mode definition
@@ -37,6 +38,7 @@ void binaryCount();
 void alternate();
 void progressiveRainbow();
 void progressiveSolid();
+void starryNight();
 
 void (*modes[])() = {
   binaryCount,
@@ -54,17 +56,19 @@ int modeRepeat[] = {
   1, //progressiveRainbow
   1, //progressiveSolid
   1, //progressiveRainbow fast
-  1 //progressiveSolid fast
+  1, //progressiveSolid fast
+  1 //starryNight
 };
 
 // the number of iterations for one complete execution of the mode
 int modeLoops[] = {
   32, //binaryCount
   2, //alternate
-  384, //progressiveRainbow - these should be multiples of 384 for best results
+  384, //progressiveRainbow - the progressive modes should be multiples of 384 for best results
   384, //progressiveSolid
   384, //progressiveRainbow fast
-  384 //progressiveSolid fast
+  384, //progressiveSolid fast
+  500 //starryNight
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
@@ -74,8 +78,19 @@ int modeLoopDelay[] = {
   1000, //progressiveRainbow
   1000, //progressiveSolid
   100, //progressiveRainbow fast
-  100 //progressiveSolid fast
+  100, //progressiveSolid fast
+  50 //starryNight
 };
+
+boolean autocycleSkip[] = {
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false
+}
 
 // placeholders to accept mode commands
 String modeCommands[] = {
@@ -84,13 +99,14 @@ String modeCommands[] = {
   "MODE_2",
   "MODE_3",
   "MODE_4",
-  "MODE_5"
+  "MODE_5",
+  "MODE_6"
 };
 
-int NUM_MODES = 6;
+int NUM_MODES = 7;
 
 // mode state
-int mode = 2;
+int mode = 6;
 boolean autoCycle = true;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -131,6 +147,7 @@ COLOR currentColor;
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
 int savedInt;
+COLOR ledColors[NUM_LEDS]; //this must be kept updated by a particular mode, if it plans to use it
 
 void setup() {
 
@@ -165,7 +182,7 @@ void loop() {
 
   if (autoCycle) {
     while (true) {
-      for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode]; modeIterationNumber++) {
+      for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode] && !autocycleSkip[mode]; modeIterationNumber++) {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
           modes[mode]();
           delay(modeLoopDelay[mode]);
@@ -407,6 +424,25 @@ void progressiveSolid() {
   savedInt += 1; // step size for next color
   if (savedInt >= 384) {
     savedInt -= 384;
+  }
+}
+
+void starryNight() {
+  if (modeLoopNumber == 0) {
+    savedColor = randomColor(); // "background" color
+    setStripColor(savedColor);
+    for (int i = 0; i < NUM_LEDS; i++) {
+      ledColors[i] = savedColor
+    }
+  }
+
+  // we'll pick a random LED; if it's the background color, set it to a random color; otherwise, reset its color
+  int led = random(0, NUM_LEDS);
+  if (ledColors[led] == savedColor) {
+    setPixelColor(led, randomColor());
+  }
+  else {
+    setPixelColor(led, savedColor);
   }
 }
 
