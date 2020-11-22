@@ -110,7 +110,7 @@ String modeCommands[] = {
 int NUM_MODES = 8;
 
 // mode state
-int mode = 7;
+int mode = 5;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -418,7 +418,6 @@ void progressiveSolid() {
 void breathingSolid() {
   if (modeIterationNumber == 0 && modeLoopNumber == 0) { // pick one color and repeat it until the mode changes
     savedColor = randomColor();
-    savedInt = brightness;
   }
 
   int duration = 2000; //length of time a breath should last (ms)
@@ -426,7 +425,7 @@ void breathingSolid() {
   int stepSize = brightness / steps;
   int stepDelay = duration / steps;
 
-  if (modeLoopNumber == 0) {
+  if (modeLoopNumber == 1) {
     //exhale - go from go from current brightness to off
     for (int step = 0; step < steps; step++) {
       FastLED.setBrightness(brightness - (step * stepSize));
@@ -448,7 +447,37 @@ void breathingSolid() {
   //end the loop with the strip solid and brightness fully reset
 }
 
-void breathing() {}
+void breathing() {
+  if (modeLoopNumber == 0) { // pick a new color each breath
+    savedColor = randomColor();
+  }
+
+  int duration = 2000; //length of time a breath should last (ms)
+  int steps = min(brightness, 40);
+  int stepSize = brightness / steps;
+  int stepDelay = duration / steps;
+
+  if (modeLoopNumber == 1) {
+    //exhale - go from go from current brightness to off
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(brightness - (step * stepSize));
+      setStripColor(savedColor);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
+      delay(stepDelay);
+    }
+    off();
+  }
+  else {
+    for (int step = 0; step < steps; step++) {
+      FastLED.setBrightness(step * stepSize);
+      setStripColor(savedColor);
+      FastLED.setBrightness(brightness); //this is just in case the mode gets reset; it keeps the old brightness
+      delay(stepDelay);
+    }
+    setStripColor(savedColor);
+  }
+  //end the loop with the strip solid and brightness fully reset
+}
 void breathingRainbow() {}
 
 void starryNight() {
