@@ -45,7 +45,7 @@ void (*modes[])() = {
 
 // the number of times the mode should be repeated
 int modeRepeat[] = {
-  2, //binaryCount
+  1, //binaryCount
   4, //alternate
   1 //progressiveRainbow
 };
@@ -54,14 +54,14 @@ int modeRepeat[] = {
 int modeLoops[] = {
   32, //binaryCount
   2, //alternate
-  400 //progressiveRainbow
+  100 //progressiveRainbow
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
   333, //binaryCount
-  20, //alternate
-  50 //progressiveRainbow
+  1000, //alternate
+  250 //progressiveRainbow
 };
 
 // placeholders to accept mode commands
