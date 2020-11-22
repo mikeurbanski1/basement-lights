@@ -485,6 +485,11 @@ void breathingRainbow() {
     rainbow();
   }
 
+  int duration = 2000; //length of time a breath should last (ms)
+  int steps = min(brightness, 40);
+  int stepSize = brightness / steps;
+  int stepDelay = duration / steps;
+
   if (modeLoopNumber == 0) {
     // inhale - go from off up to set brightness
     for (int step = 0; step < steps; step++) {
