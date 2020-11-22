@@ -144,6 +144,7 @@ def list_modes(direction, brightness, room):
     if direction:
         ret = send_command(f'{direction.upper()}_BRIGHTNESS')
     else:
+        brightness = int(brightness)
         if brightness < 1:
             brightness = 1
         elif brightness > 255:
