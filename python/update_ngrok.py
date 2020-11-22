@@ -3,8 +3,11 @@ import os
 import time
 import json
 import sys
+import re
 
 time.sleep(5)  # wait for boot
+
+pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
 
 url = None
 
@@ -19,13 +22,14 @@ while True:
 
     time.sleep(5)
 
-    with open('log.txt', 'r') as fp:
-        for line in fp.readlines():
-            if 'https' in line:
-                index = line.index('https')
-                url = line[index:]
-                print(f'ngrok URL: {url}')
-                break
+    while not url:
+        with open('log.txt', 'r') as fp:
+            for line in fp.readlines():
+                matches = pattern.findall(line)
+                if matches:
+                    url = matches[0]
+                    break
+        time.sleep(1)
 
     url = url.rstrip()
 
