@@ -29,7 +29,7 @@ first_loop = True
 
 
 def send_status_update(url, status):
-    curl = subprocess.Popen(['curl', f'{url}/status/{status}', '-X', 'POST'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    curl = subprocess.Popen(['curl', f'{url}/startup/{status}', '-X', 'POST'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = curl.communicate()
 
     if stderr:
