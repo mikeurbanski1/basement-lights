@@ -5,8 +5,8 @@ Description=Run alexa skill listener
 ExecStart=/home/hello/basement-lights/run.sh
 Environment="PYTHONPATH=/home/hello/basement-lights"
 WorkingDirectory=/home/hello/basement-lights
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=file:/var/log/alexa
+StandardError=file:/var/log/alexa
 SyslogIdentifier=alexa_listener
 User=hello
 
