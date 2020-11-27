@@ -120,6 +120,8 @@ def set_lights(status, room):
         ret = send_command('SOLID')
     elif status.lower() == 'on':
         ret = send_command('SOLID')
+    elif status.lower() == 'rainbow':
+        ret = send_command('RAINBOW')
     else:
         return statement(f'I did not recognize the status {status}')
 
