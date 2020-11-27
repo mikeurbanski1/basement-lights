@@ -10,7 +10,10 @@ pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
 
 logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
-logger.addHandler(logging.StreamHandler())
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
+
 
 while True:
     if os.path.exists('log.txt'):
