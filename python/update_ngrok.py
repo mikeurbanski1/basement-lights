@@ -53,8 +53,8 @@ while True:
     stdout, stderr = get_manifest.communicate()
 
     if stderr:
-        logger.critical('Got stderr output while getting manifest', file=sys.stderr)
-        logger.critical(stderr, file=sys.stderr)
+        logger.critical('Got stderr output while getting manifest')
+        logger.critical(stderr)
         ngrok.kill()
         exit(1)
 
@@ -72,8 +72,8 @@ while True:
     stdout, stderr = update_manifest.communicate()
 
     if stderr:
-        logger.critical('Got stderr output while updating manifest', file=sys.stderr)
-        logger.critical(stderr, file=sys.stderr)
+        logger.critical('Got stderr output while updating manifest')
+        logger.critical(stderr)
         ngrok.kill()
         exit(1)
 
