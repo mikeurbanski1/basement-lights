@@ -12,3 +12,5 @@ cp run.sh $DEPLOYMENT_ROOT
 sudo cp systemd/alexa.service /etc/systemd/system/alexa.service
 sudo cp systemd/ngrok.service /etc/systemd/system/ngrok.service
 sudo systemctl daemon-reload
+
+sudo cp nginx/alexa /etc/nginx/sites-available/alexa

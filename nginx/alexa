@@ -1,0 +1,16 @@
+server {
+        listen 7626;
+        #listen 7626 ssl;
+        server_name 192.168.0.178;
+        #ssl_certificate /home/hello/basement-lights/cert.pem;
+        #ssl_certificate_key /home/hello/basement-lights/key.pem;
+
+        #location ~ /.well-known {
+        #       root /home/hello/basement-lights/.well_known;
+        #}
+
+        location / {
+                include proxy_params;
+                proxy_pass http://unix:/home/hello/lights/alexa.sock;
+        }
+}

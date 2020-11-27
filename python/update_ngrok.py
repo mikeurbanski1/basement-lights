@@ -102,6 +102,6 @@ try:
         logger.info('Killing ngrok')
         ngrok.kill()
         time.sleep(5)
-        
+
 except Exception as e:
     logger.critical('An unrecoverable error occurred', exc_info=e)
