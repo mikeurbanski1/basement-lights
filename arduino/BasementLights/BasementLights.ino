@@ -11,7 +11,7 @@
 
 #define STATUS_LEDS 32
 
-int initSteps = 4;
+int initSteps = 3;
 int ledsPerInit = STATUS_LEDS / initSteps;
 boolean initializing = false; // whether we are in an initialization routine
 
@@ -249,23 +249,15 @@ boolean checkCommand() {
     else if (data.equals("INIT_0")) {
       initializing = true;
       off();
-      setPixelColor(0, initColor, true);
+      setStripColor(initColor, 0, ledsPerInit);
 
       return true;
     }
     else if (data.equals("INIT_1")) {
-      setStripColor(initColor, 0, ledsPerInit);
-      return true;
-    }
-    else if (data.equals("INIT_2")) {
       setStripColor(initColor, ledsPerInit, 2 * ledsPerInit);
       return true;
     }
-    else if (data.equals("INIT_3")) {
-      setStripColor(initColor, 2 * ledsPerInit, 3 * ledsPerInit);
-      return true;
-    }
-    else if (data.equals("INIT_4")) {
+    else if (data.equals("INIT_FINAL")) {
       // Indicate that the command was sent, then reset back to the previous actual state
       off();
       delay(500);
