@@ -9,7 +9,10 @@ pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
 
 while True:
     if os.path.exists('log.txt'):
+        print('Removing old log.txt')
         os.remove('log.txt')
+    else:
+        print('log.txt did not exist')
 
     print('Starting ngrok')
     ngrok = subprocess.Popen(['ngrok', 'http', '--log', 'log.txt', '7626'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -20,6 +23,7 @@ while True:
 
     url = None
 
+    iterations = 1
     while not url:  # it may start up before internet is available, so loop until we find the new entry
         with open('log.txt', 'r') as fp:
             for line in fp.readlines():
@@ -28,8 +32,10 @@ while True:
                     url = matches[0]
                     break
         time.sleep(1)
+        iterations += 1
 
     url = url.rstrip()
+    print(f'Found url" {url} (iterations: {iterations}')
 
     with open('url.txt', 'w') as fp:
         fp.write(url)
@@ -62,10 +68,16 @@ while True:
     print(stdout)
 
     # send init notification
-    subprocess.Popen(['curl', f'{url}/hello'])
+    curl = subprocess.Popen(['curl', f'{url}/hello'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = curl.communicate()
+    if stderr:
+        print('Got stderr output while sending curl command', file=sys.stderr)
+        print(stderr, file=sys.stderr)
+
+    print(stdout)
 
     print('Sleeping for 7 hours (25200 seconds)')
     time.sleep(25200)
     print('Killing ngrok')
     ngrok.kill()
-    time.sleep(1)
+    time.sleep(5)
