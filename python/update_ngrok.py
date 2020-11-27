@@ -3,7 +3,6 @@ import subprocess
 import os
 import time
 import json
-import sys
 import re
 
 pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
@@ -11,18 +10,24 @@ pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
 logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
 
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+
 handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-handler = logging.handlers.RotatingFileHandler('logs/ngrok.log', maxBytes=1024, backupCount=5)
-handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+handler = logging.handlers.RotatingFileHandler('logs/ngrok.log', maxBytes=1024 * 10, backupCount=5)
+handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 ngrok_log = 'logs/ngrok_exec.log'
 
+# welcome to the jankiest script ever
+
 try:
     while True:
+        # We are going to search this log for the url, as this is the best (only?) way to get output from the
+        # ngrok process. Remove the old one so we don't find the old url.
         if os.path.exists(os.path.join(ngrok_log)):
             logger.debug('Removing old ngrok log')
             os.remove(ngrok_log)
@@ -39,7 +44,7 @@ try:
         url = None
 
         iterations = 1
-        while not url:  # it may start up before internet is available, so loop until we find the new entry
+        while not url:  # this script may start up before internet is available, so loop until we find the new entry
             with open(ngrok_log, 'r') as fp:
                 for line in fp.readlines():
                     matches = pattern.findall(line)
@@ -52,14 +57,17 @@ try:
         url = url.rstrip()
         logger.info(f'Found url: {url} (iterations: {iterations})')
 
+        # this just makes the URL easy to find in case we need it.
         with open('logs/url.txt', 'w') as fp:
             fp.write(url)
             logger.debug('Wrote new URL to logs/url.txt')
 
+        # get the current manifest, which we will then update with the new URL
         get_manifest = subprocess.Popen(['ask', 'smapi', 'get-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         stdout, stderr = get_manifest.communicate()
 
+        # We do not expect any stderr output, so this would indicate a failure
         if stderr:
             logger.critical('Got stderr output while getting manifest')
             logger.critical(stderr)
@@ -79,6 +87,7 @@ try:
         update_manifest = subprocess.Popen(['ask', 'smapi', 'update-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development', '--manifest', json.dumps(manifest_config)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = update_manifest.communicate()
 
+        # On a normal execution, we get this stderr warning; it's not a true error
         if stderr and not stderr.startswith(b'[Warn]: This is an asynchronous operation'):
             logger.critical('Got unexpected stderr output while updating manifest')
             logger.critical(stderr)
@@ -90,11 +99,15 @@ try:
         logger.info('Update skill response:')
         logger.info(stdout)
 
+        time.sleep(2)  # give some time for the update to actually take effect
+
         # send init notification
         curl = subprocess.Popen(['curl', f'{url}/hello'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = curl.communicate()
 
-        logger.error(f'Curl stderr: {stderr}')
+        if stderr:
+            logger.info(f'Curl stderr: {stderr}')  # normally just the curl status output, but log it in case
+
         logger.info(stdout)
 
         logger.info('Sleeping for 7 hours (25200 seconds)')
