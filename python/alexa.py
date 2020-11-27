@@ -140,7 +140,7 @@ def set_lights(status, room):
 
 
 @ask.intent('ShutdownIntent')
-@ask.intent('StopIntent')
+@ask.intent('AMAZON.StopIntent')
 def set_lights(room):
     threading.Thread(target=shutdown, name='ShutdownThread').start()
     return statement('ok')
