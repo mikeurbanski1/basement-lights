@@ -90,7 +90,7 @@ while True:
     logger.info(stdout)
 
     logger.info('Sleeping for 7 hours (25200 seconds)')
-    time.sleep(25200)
+    time.sleep(60)
     logger.info('Killing ngrok')
     ngrok.kill()
     time.sleep(5)
