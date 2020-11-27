@@ -217,7 +217,7 @@ void loop() {
     }
   }
   else {
-    // SOLID or OFF were selected, and would have already been set, so do nothing
+    // SOLID, RAINBOW, or OFF were selected, and would have already been set, so do nothing
     delay(10);
 
     checkCommand(); // we'll always start at the top of the loop so no need for an if here
@@ -230,6 +230,9 @@ void initialize() {
 
   if (mode == SOLID_MODE) {
     solid();
+  }
+  else if (mode == RAINBOW_MODE) {
+    rainbow();
   }
   else if (mode == OFF_MODE) {
     off();
