@@ -5,7 +5,10 @@ import time
 import json
 import re
 
-pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
+
+# welcome to the jankiest script ever
+
+pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')  # regex pattern for ngrok url in ngrok log file
 
 logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
@@ -22,7 +25,18 @@ logger.addHandler(handler)
 
 ngrok_log = 'logs/ngrok_exec.log'
 
-# welcome to the jankiest script ever
+first_loop = True
+
+
+def send_status_update(status):
+    curl = subprocess.Popen(['curl', f'{url}/status/{status}', '-X', 'POST'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = curl.communicate()
+
+    if stderr:
+        logger.info(f'Curl stderr: {stderr}')  # normally just the curl status output, but log it in case
+
+    logger.info(stdout)
+
 
 try:
     while True:
@@ -34,12 +48,17 @@ try:
         else:
             logger.debug('ngrok log did not exist')
 
+        if first_loop:
+            send_status_update('starting_init')
+
         logger.info('Starting ngrok')
         ngrok = subprocess.Popen(['ngrok', 'http', '--log', ngrok_log, '7626'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         logger.info(f'ngrok PID: {ngrok.pid}')
 
         time.sleep(5)  # slight delay for ngrok to run
+        if first_loop:
+            send_status_update('ngrok_started')
 
         url = None
 
@@ -56,6 +75,9 @@ try:
 
         url = url.rstrip()
         logger.info(f'Found url: {url} (iterations: {iterations})')
+
+        if first_loop:
+            send_status_update('ngrok_running')
 
         # this just makes the URL easy to find in case we need it.
         with open('logs/url.txt', 'w') as fp:
@@ -75,6 +97,9 @@ try:
             exit(1)
 
         manifest_config = json.loads(stdout)
+
+        if first_loop:
+            send_status_update('manifest_retrieved')
 
         logger.info('Current manifest config:')
         logger.info(json.dumps(manifest_config, indent=2))
@@ -102,13 +127,9 @@ try:
         time.sleep(5)  # give some time for the update to actually take effect so that the init command is accurate
 
         # send init notification
-        curl = subprocess.Popen(['curl', f'{url}/hello'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = curl.communicate()
+        send_status_update('initialized')
 
-        if stderr:
-            logger.info(f'Curl stderr: {stderr}')  # normally just the curl status output, but log it in case
-
-        logger.info(stdout)
+        first_loop = False
 
         logger.info('Sleeping for 7 hours (25200 seconds)')
         time.sleep(25200)

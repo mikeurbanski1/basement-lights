@@ -48,6 +48,14 @@ colors = [
   'ORANGE'
 ]
 
+status_mapping = {
+    'starting_init': 'INIT_0',
+    'ngrok_started': 'INIT_1',
+    'ngrok_running': 'INIT_2',
+    'manifest_retrieved': 'INIT_3',
+    'initialized': 'INIT_4'
+}
+
 
 def setup_serial():
     global port
@@ -80,8 +88,19 @@ port_monitor.start()
 
 @app.route('/hello')
 def hello_world():
-    if send_command('INIT'):
-        return 'Sent INIT command\n'
+    return 'hello\n'
+
+
+@app.route('/startup/<status>', methods=['POST'])
+def set_startup_status(status):
+
+    command = status_mapping.get(status)
+
+    if not command:
+        return f'Invalid startup status: {status}'
+
+    if send_command(command):
+        return f'Sent command: {command}\n'
     else:
         return 'Arduino was not connected\n'
 

@@ -9,11 +9,18 @@
 #define DATA_PIN 3
 #define CLOCK_PIN 13
 
+#define STATUS_LEDS 32
+
+int initSteps = 4;
+int ledsPerInit = STATUS_LEDS / initSteps;
+boolean initializing = false; // whether we are in an initialization routine
+
 CRGB ledStrip[NUM_LEDS];
 
 CRGB OFF = CRGB(0, 0, 0);
 
 COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
+COLOR initColor = getColorRGB(255, 255, 0);
 
 /*
  * How to add a mode:
@@ -169,6 +176,12 @@ int value = 0;
 
 void loop() {
 
+  if (initializing) {
+    checkCommand();
+    delay(100);
+    return;
+  }
+
   if (autoCycle) {
     while (true) {
       for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode] && !autocycleSkip[mode]; modeIterationNumber++) {
@@ -233,8 +246,27 @@ boolean checkCommand() {
       autoCycle = false;
       return true;
     }
-    else if (data.equals("INIT")) {
-      // Indicate that the  command was sent, then reset in the current state
+    else if (data.equals("INIT_0")) {
+      initializing = true;
+      off();
+      setPixelColor(0, initColor, true);
+
+      return true;
+    }
+    else if (data.equals("INIT_1")) {
+      setStripColor(initColor, 0, ledsPerInit);
+      return true;
+    }
+    else if (data.equals("INIT_2")) {
+      setStripColor(initColor, ledsPerInit, 2 * ledsPerInit);
+      return true;
+    }
+    else if (data.equals("INIT_3")) {
+      setStripColor(initColor, 2 * ledsPerInit, 3 * ledsPerInit);
+      return true;
+    }
+    else if (data.equals("INIT_4")) {
+      // Indicate that the command was sent, then reset back to the previous actual state
       off();
       delay(500);
       setStripColor(getColorRGB(255, 255, 0));
@@ -253,6 +285,8 @@ boolean checkCommand() {
       if (mode == SOLID_MODE) {
         solid(currentColor);
       }
+
+      initializing = false;
 
       return true;
     }
