@@ -40,7 +40,7 @@ try:
 
         iterations = 1
         while not url:  # it may start up before internet is available, so loop until we find the new entry
-            with open('log.txt', 'r') as fp:
+            with open(ngrok_log, 'r') as fp:
                 for line in fp.readlines():
                     matches = pattern.findall(line)
                     if matches:
