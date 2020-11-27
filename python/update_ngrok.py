@@ -119,6 +119,9 @@ try:
         logger.info('Update skill response:')
         logger.info(stdout)
 
+        if first_loop:
+            send_status_update(url, 'manifest_updated')
+
         time.sleep(5)  # give some time for the update to actually take effect so that the init command is accurate
 
         # send init notification

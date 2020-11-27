@@ -11,7 +11,7 @@
 
 #define STATUS_LEDS 32
 
-int initSteps = 3;
+int initSteps = 4;
 int ledsPerInit = STATUS_LEDS / initSteps;
 boolean initializing = false; // whether we are in an initialization routine
 
@@ -255,6 +255,10 @@ boolean checkCommand() {
     }
     else if (data.equals("INIT_1")) {
       setStripColor(initColor, ledsPerInit, 2 * ledsPerInit);
+      return true;
+    }
+    else if (data.equals("INIT_2")) {
+      setStripColor(initColor, 2 * ledsPerInit, 3 * ledsPerInit);
       return true;
     }
     else if (data.equals("INIT_FINAL")) {

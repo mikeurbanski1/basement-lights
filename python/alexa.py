@@ -51,6 +51,7 @@ colors = [
 status_mapping = {
     'ngrok_running': 'INIT_0',
     'manifest_retrieved': 'INIT_1',
+    'manifest_updated': 'INIT_2',
     'initialized': 'INIT_FINAL'
 }
 
