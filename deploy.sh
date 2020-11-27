@@ -15,9 +15,10 @@ sudo systemctl daemon-reload
 
 
 if cmp -s "nginx/alexa" "/etc/nginx/sites-available/alexa" ; then
-   #
+   echo "Did not need to restart nginx"
 else
    sudo cp nginx/alexa /etc/nginx/sites-available/alexa
    sudo service nginx restart
+   echo "Restarted nginx"
 fi
 
