@@ -281,6 +281,9 @@ boolean checkCommand() {
       if (mode == SOLID_MODE) {
         solid(currentColor);
       }
+      else if (mode == RAINBOW_MODE) {
+        rainbow();
+      }
 
       initializing = false;
 

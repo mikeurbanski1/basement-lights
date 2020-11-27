@@ -186,7 +186,7 @@ def list_modes(direction, brightness, room):
 
 @ask.intent('AMAZON.HelpIntent')
 def help():
-    speech_text = 'You can say: turn the light on, off, or solid; set the mode to blank; ' \
+    speech_text = 'You can say: turn the light on, off, solid, or rainbow; set the mode to blank; ' \
                   'change the color to blank; set the brightness to blank, or increase or decrease the ' \
                   'brightness. You can also ask for a list of modes or colors.'
     return question(speech_text).reprompt(speech_text)
