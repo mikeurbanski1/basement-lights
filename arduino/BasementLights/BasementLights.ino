@@ -254,26 +254,26 @@ boolean checkCommand() {
       return true;
     }
     else if (data.equals("INIT_1")) {
-      setStripColor(initColor, ledsPerInit, 2 * ledsPerInit);
+      setStripColor(initColor, ledsPerInit, ledsPerInit);
       return true;
     }
     else if (data.equals("INIT_2")) {
-      setStripColor(initColor, 2 * ledsPerInit, 3 * ledsPerInit);
+      setStripColor(initColor, 2 * ledsPerInit, ledsPerInit);
       return true;
     }
     else if (data.equals("INIT_FINAL")) {
       // Indicate that the command was sent, then reset back to the previous actual state
       off();
       delay(500);
-      setStripColor(getColorRGB(255, 255, 0));
+      setStripColor(initColor);
       delay(500);
       off();
       delay(500);
-      setStripColor(getColorRGB(255, 255, 0));
+      setStripColor(initColor);
       delay(500);
       off();
       delay(500);
-      setStripColor(getColorRGB(255, 255, 0));
+      setStripColor(initColor);
       delay(500);
       off();
       delay(500);
