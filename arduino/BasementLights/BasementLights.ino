@@ -5,7 +5,7 @@
 
 #include "FastLED.h"
 
-#define NUM_LEDS 32
+#define NUM_LEDS 96
 #define DATA_PIN 3
 #define CLOCK_PIN 13
 
