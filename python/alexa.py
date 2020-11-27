@@ -85,6 +85,13 @@ port_monitor = threading.Thread(target=port_monitor, name='PortMonitorThread', d
 port_monitor.start()
 
 
+def shutdown():
+    logger.warning('Shutting down in 5 seconds')
+    time.sleep(5)
+    send_command(status_mapping['initialized'])
+    os.system('sudo shutdown now')
+
+
 @app.route('/hello')
 def hello_world():
     return 'hello\n'
@@ -130,6 +137,12 @@ def set_lights(status, room):
         return statement('ok')
     else:
         return statement('It seems that Arduino is not connected')
+
+
+@ask.intent('ShutdownIntent')
+def set_lights(room):
+    threading.Thread(target=shutdown, name='ShutdownThread').start()
+    return statement('ok')
 
 
 @ask.intent('ModeIntent', mapping={'mode': 'mode'})
