@@ -49,11 +49,9 @@ colors = [
 ]
 
 status_mapping = {
-    'starting_init': 'INIT_0',
-    'ngrok_started': 'INIT_1',
-    'ngrok_running': 'INIT_2',
-    'manifest_retrieved': 'INIT_3',
-    'initialized': 'INIT_4'
+    'ngrok_running': 'INIT_0',
+    'manifest_retrieved': 'INIT_1',
+    'initialized': 'INIT_FINAL'
 }
 
 

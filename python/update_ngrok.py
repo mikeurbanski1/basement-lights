@@ -28,7 +28,7 @@ ngrok_log = 'logs/ngrok_exec.log'
 first_loop = True
 
 
-def send_status_update(status):
+def send_status_update(url, status):
     curl = subprocess.Popen(['curl', f'{url}/status/{status}', '-X', 'POST'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = curl.communicate()
 
@@ -48,17 +48,12 @@ try:
         else:
             logger.debug('ngrok log did not exist')
 
-        if first_loop:
-            send_status_update('starting_init')
-
         logger.info('Starting ngrok')
         ngrok = subprocess.Popen(['ngrok', 'http', '--log', ngrok_log, '7626'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         logger.info(f'ngrok PID: {ngrok.pid}')
 
         time.sleep(5)  # slight delay for ngrok to run
-        if first_loop:
-            send_status_update('ngrok_started')
 
         url = None
 
@@ -77,7 +72,7 @@ try:
         logger.info(f'Found url: {url} (iterations: {iterations})')
 
         if first_loop:
-            send_status_update('ngrok_running')
+            send_status_update(url, 'ngrok_running')
 
         # this just makes the URL easy to find in case we need it.
         with open('logs/url.txt', 'w') as fp:
@@ -99,7 +94,7 @@ try:
         manifest_config = json.loads(stdout)
 
         if first_loop:
-            send_status_update('manifest_retrieved')
+            send_status_update(url, 'manifest_retrieved')
 
         logger.info('Current manifest config:')
         logger.info(json.dumps(manifest_config, indent=2))
@@ -127,7 +122,7 @@ try:
         time.sleep(5)  # give some time for the update to actually take effect so that the init command is accurate
 
         # send init notification
-        send_status_update('initialized')
+        send_status_update(url, 'initialized')
 
         first_loop = False
 
