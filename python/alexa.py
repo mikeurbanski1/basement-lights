@@ -1,4 +1,4 @@
-import logging
+import logging.handlers
 import os
 import serial
 import time
@@ -15,6 +15,10 @@ ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
 logger = logging.getLogger('flask_ask')
+
+handler = logging.handlers.RotatingFileHandler('logs/alexa.log', maxBytes=1024, backupCount=5)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
 
 mode_names = [
     'progressive rainbow',

@@ -1,4 +1,4 @@
-import logging
+import logging.handlers
 import subprocess
 import os
 import time
@@ -10,20 +10,27 @@ pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')
 
 logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
+
 handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 logger.addHandler(handler)
 
+handler = logging.handlers.RotatingFileHandler('logs/ngrok.log', maxBytes=1024, backupCount=5)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
+
+ngrok_log = 'logs/ngrok_exec.log'
+
 
 while True:
-    if os.path.exists('log.txt'):
-        logger.debug('Removing old log.txt')
-        os.remove('log.txt')
+    if os.path.exists(os.path.join(ngrok_log)):
+        logger.debug('Removing old ngrok log')
+        os.remove(ngrok_log)
     else:
-        logger.debug('log.txt did not exist')
+        logger.debug('ngrok log did not exist')
 
     logger.info('Starting ngrok')
-    ngrok = subprocess.Popen(['ngrok', 'http', '--log', 'log.txt', '7626'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    ngrok = subprocess.Popen(['ngrok', 'http', '--log', ngrok_log, '7626'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     logger.info(f'ngrok PID: {ngrok.pid}')
 
@@ -45,8 +52,9 @@ while True:
     url = url.rstrip()
     logger.info(f'Found url: {url} (iterations: {iterations})')
 
-    with open('url.txt', 'w') as fp:
+    with open('logs/url.txt', 'w') as fp:
         fp.write(url)
+        logger.debug('Wrote new URL to logs/url.txt')
 
     get_manifest = subprocess.Popen(['ask', 'smapi', 'get-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 

@@ -2,8 +2,8 @@
 Description=Run ngrok service
 
 [Service]
-ExecStart=python3 -u /home/hello/basement-lights/python/update_ngrok.py
-WorkingDirectory=/home/hello/basement-lights
+ExecStart=python3 -u /home/hello/lights/python/update_ngrok.py
+WorkingDirectory=/home/hello/lights
 StandardOutput=file:/var/log/ngrok
 StandardError=file:/var/log/ngrok
 SyslogIdentifier=update_ngrok

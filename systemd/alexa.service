@@ -2,9 +2,9 @@
 Description=Run alexa skill listener
 
 [Service]
-ExecStart=/home/hello/basement-lights/run.sh
-Environment="PYTHONPATH=/home/hello/basement-lights"
-WorkingDirectory=/home/hello/basement-lights
+ExecStart=/home/hello/lights/run.sh
+Environment="PYTHONPATH=/home/hello/lights"
+WorkingDirectory=/home/hello/lights
 StandardOutput=file:/var/log/alexa
 StandardError=file:/var/log/alexa
 SyslogIdentifier=alexa_listener
