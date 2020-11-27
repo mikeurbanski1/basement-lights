@@ -71,11 +71,13 @@ while True:
     update_manifest = subprocess.Popen(['ask', 'smapi', 'update-skill-manifest', '-s', 'amzn1.ask.skill.15dc0b67-8d15-4262-a35d-8333ae4568f0', '-g', 'development', '--manifest', json.dumps(manifest_config)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = update_manifest.communicate()
 
-    if stderr:
-        logger.critical('Got stderr output while updating manifest')
+    if stderr and not stderr.startswith(b'[Warn]: This is an asynchronous operation'):
+        logger.critical('Got unexpected stderr output while updating manifest')
         logger.critical(stderr)
         ngrok.kill()
         exit(1)
+    elif stderr:
+        logger.warning(stderr)
 
     logger.info('Update skill response:')
     logger.info(stdout)
