@@ -43,6 +43,9 @@ void starryNight();
 void breathing();
 void breathingRainbow();
 void breathingSolid();
+void marqueeSolid();
+void marqueeRainbow();
+void zip();
 
 void (*modes[])() = {
   progressiveRainbow,
@@ -52,7 +55,8 @@ void (*modes[])() = {
   starryNight,
   breathing,
   breathingRainbow,
-  breathingSolid
+  breathingSolid,
+  zip
 };
 
 // the number of times the mode should be repeated
@@ -64,7 +68,8 @@ int modeRepeat[] = {
   1, //starryNight
   10, //breathing
   10, //breathingRainbow
-  10 //breathingSolid
+  10, //breathingSolid
+  10
 };
 
 // the number of iterations for one complete execution of the mode
@@ -76,7 +81,8 @@ int modeLoops[] = {
   500, //starryNight
   2, //breathing - the breathing ones will use two loops - one to "inhale", one to "exhale"
   2, //breathingRainbow
-  2 //breathingSolid
+  2, //breathingSolid
+  1
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
@@ -88,7 +94,8 @@ int modeLoopDelay[] = {
   50, //starryNight
   1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
   1000, //breathingRainbow
-  1000 //breathingSolid
+  1000, //breathingSolid
+  1
 };
 
 boolean autocycleSkip[] = {
@@ -99,7 +106,8 @@ boolean autocycleSkip[] = {
   false,
   false,
   true,
-  true
+  true,
+  false
 };
 
 // placeholders to accept mode commands
@@ -111,13 +119,14 @@ String modeCommands[] = {
   "MODE_4",
   "MODE_5",
   "MODE_6",
-  "MODE_7"
+  "MODE_7",
+  "MODE_8"
 };
 
-int NUM_MODES = 8;
+int NUM_MODES = 9;
 
 // mode state
-int mode = 6;
+int mode = 8;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -575,6 +584,16 @@ void starryNight() {
   }
   else {
     setPixelColor(led, savedColor, true);
+  }
+}
+
+void zip() {
+  COLOR color = randomColor();
+  off();
+  for (int i = 0; i < NUM_LEDS; i++) {
+    setPixelColor(i, color, true);
+    delay(2);
+    setPixelColor(i, OFF);
   }
 }
 
