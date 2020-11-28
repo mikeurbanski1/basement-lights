@@ -609,7 +609,7 @@ void whackAnLed() {
   COLOR color = randomColor();
   off();
   for (int i = 0; i < NUM_LEDS; i++) {
-    int pixel = random(0, NUM_LEDS)
+    int pixel = random(0, NUM_LEDS);
     setPixelColor(pixel, color, true);
     delay(2);
     setPixelColor(pixel, OFF);
