@@ -335,9 +335,9 @@ boolean checkCommand() {
       if (mode == SOLID_MODE) {
         int space1 = data.indexOf(' ');
         int space2 = data.lastIndexOf(' ');
-        data = data.substring(space1 + 1, space2);
-        data.toLowerCase();
-        char c = data.charAt(0);
+        String colorStr = data.substring(space1 + 1, space2);
+        colorStr.toLowerCase();
+        char c = colorStr.charAt(0);
         int value = data.substring(space2 + 1).toInt();
         COLOR curColor = ledStrip[0];
         byte r = c == 'r' ? value : getColorComponent(curColor, 'r');
