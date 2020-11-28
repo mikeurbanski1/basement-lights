@@ -46,6 +46,8 @@ void breathingSolid();
 void marqueeSolid();
 void marqueeRainbow();
 void zip();
+void whackAnLed();
+
 
 void (*modes[])() = {
   progressiveRainbow,
@@ -56,7 +58,8 @@ void (*modes[])() = {
   breathing,
   breathingRainbow,
   breathingSolid,
-  zip
+  zip,
+  whackAnLed,
 };
 
 // the number of times the mode should be repeated
@@ -69,6 +72,7 @@ int modeRepeat[] = {
   10, //breathing
   10, //breathingRainbow
   10, //breathingSolid
+  10,
   10
 };
 
@@ -82,6 +86,7 @@ int modeLoops[] = {
   2, //breathing - the breathing ones will use two loops - one to "inhale", one to "exhale"
   2, //breathingRainbow
   2, //breathingSolid
+  1,
   1
 };
 
@@ -95,6 +100,7 @@ int modeLoopDelay[] = {
   1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
   1000, //breathingRainbow
   1000, //breathingSolid
+  1,
   1
 };
 
@@ -107,6 +113,7 @@ boolean autocycleSkip[] = {
   false,
   true,
   true,
+  false,
   false
 };
 
@@ -120,13 +127,14 @@ String modeCommands[] = {
   "MODE_5",
   "MODE_6",
   "MODE_7",
-  "MODE_8"
+  "MODE_8",
+  "MODE_9"
 };
 
-int NUM_MODES = 9;
+int NUM_MODES = 10;
 
 // mode state
-int mode = 8;
+int mode = 9;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -594,6 +602,17 @@ void zip() {
     setPixelColor(i, color, true);
     delay(2);
     setPixelColor(i, OFF);
+  }
+}
+
+void whackAnLed() {
+  COLOR color = randomColor();
+  off();
+  for (int i = 0; i < NUM_LEDS; i++) {
+    int pixel = random(0, NUM_LEDS)
+    setPixelColor(pixel, color, true);
+    delay(2);
+    setPixelColor(pixel, OFF);
   }
 }
 
