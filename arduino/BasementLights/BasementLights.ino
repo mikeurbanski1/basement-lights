@@ -46,7 +46,7 @@ void breathingSolid();
 void marqueeSolid();
 void marqueeRainbow();
 void zip();
-void whackAnLed();
+void randomZip();
 
 
 void (*modes[])() = {
@@ -59,7 +59,7 @@ void (*modes[])() = {
   breathingRainbow,
   breathingSolid,
   zip,
-  whackAnLed,
+  randomZip,
 };
 
 // the number of times the mode should be repeated
@@ -330,6 +330,21 @@ boolean checkCommand() {
       }
       setBrightness();
       return false; // don't interrupt the flow
+    }
+    else if (data.startsWith("SET_COLOR")) {
+      if (mode == SOLID_MODE) {
+        int space1 = data.indexOf(' ');
+        int space2 = data.lastIndexOf(' ');
+        data = data.substring(space1 + 1, space2);
+        data.toLowerCase();
+        char c = data.charAt(0);
+        int value = data.substring(space2 + 1).toInt();
+        COLOR curColor = ledStrip[0];
+        byte r = c == 'r' ? value : getColorComponent(curColor, 'r');
+        byte g = c == 'g' ? value : getColorComponent(curColor, 'g');
+        byte b = c == 'b' ? value : getColorComponent(curColor, 'b');
+        setStripColor(getColorRGB(r, g, b));
+      }
     }
     else if (data.startsWith("BRIGHTNESS")) {
       String brightnessStr = data.substring(data.indexOf(' ') + 1);
@@ -605,7 +620,7 @@ void zip() {
   }
 }
 
-void whackAnLed() {
+void randomZip() {
   COLOR color = randomColor();
   off();
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -686,6 +701,39 @@ COLOR getColor(int val) {
   }
   
   return getColorRGB(r, g, b);
+}
+
+byte getColorComponent(int val, char color) {
+  byte r, g, b;
+  
+  switch(val / 128)
+  {
+    case 0:
+      r = 255 - (val % 128) * 2;   //Red down
+      g = (val % 128) * 2;      // Green up
+      b = 0;                  //blue off
+      break; 
+    case 1:
+      g = 255 - (val % 128) * 2;  //green down
+      b = (val % 128) * 2;      //blue up
+      r = 0;                  //red off
+      break; 
+    case 2:
+      b = 255 - (val % 128) * 2;  //blue down 
+      r = (val % 128) * 2;      //red up
+      g = 0;                  //green off
+      break; 
+  }
+  
+  if (color == 'r') {
+    return r;
+  }
+  else if (color == 'g') {
+    return g;
+  }
+  else {
+    return b;
+  }
 }
 
 COLOR randomColor() {

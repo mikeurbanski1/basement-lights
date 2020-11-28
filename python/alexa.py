@@ -28,7 +28,9 @@ mode_names = [
     'starry night',
     'breathing',
     'breathing rainbow',
-    'breathing solid'
+    'breathing solid',
+    'zip',
+    'random zip'
 ]
 
 mode_mapping = {}
@@ -198,11 +200,28 @@ def list_modes(direction, brightness, room):
         return statement('It seems that Arduino is not connected')
 
 
+@ask.intent('ComponentColorChangeIntent')
+def list_modes(color, value, room):
+    if color.lower() not in ['red', 'green', 'blue']:
+        return statement('Color must be red, green, or blue')
+
+    value = int(value)
+    if value < 0:
+        value = 0
+    elif value > 255:
+        value = 255
+
+    if send_command(f'SET_COLOR {color.upper()} {value}'):
+        return statement('ok')
+    else:
+        return statement('It seems that Arduino is not connected')
+
+
 @ask.intent('AMAZON.HelpIntent')
 def help():
     speech_text = 'You can say: turn the light on, off, solid, or rainbow; set the mode to blank; ' \
-                  'change the color to blank; set the brightness to blank, or increase or decrease the ' \
-                  'brightness. You can also ask for a list of modes or colors.'
+                  'change the color to blank; set the brightness to blank, increase or decrease the ' \
+                  'brightness, set color to blank. You can also ask for a list of modes or colors.'
     return question(speech_text).reprompt(speech_text)
 
 
