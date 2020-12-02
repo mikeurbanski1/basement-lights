@@ -496,7 +496,7 @@ void alternate() {
 }
 
 void progressiveRainbow() {
-  if (modeIterationNumber == 0) {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // rainbow starting color
   }
   int startLed = modeLoopNumber % NUM_LEDS;
@@ -519,7 +519,7 @@ void progressiveRainbow() {
 }
 
 void progressiveSolid() {
-  if (modeIterationNumber == 0) {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // starting color
   }
   COLOR color = getColor(savedInt);
