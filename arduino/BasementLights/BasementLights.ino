@@ -53,7 +53,7 @@ void randomZip();
 void (*modes[])() = {
   progressiveRainbow,
   progressiveSolid,
-  progressiveRainbowSimple,
+  progressiveRainbow,
   progressiveSolid,
   starryNight,
   breathing,
@@ -95,7 +95,7 @@ int modeLoops[] = {
 int modeLoopDelay[] = {
   0, //progressiveRainbow - delays handled within function
   1000, //progressiveSolid
-  100, //progressiveRainbow fast
+  0, //progressiveRainbow fast
   100, //progressiveSolid fast
   50, //starryNight
   1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
@@ -525,10 +525,10 @@ void progressiveRainbow() {
   }
   int startLed = modeLoopNumber % NUM_LEDS;
   int step = 384 / NUM_LEDS;
-  int stepDelay = 1000 / step; // the number of ms for an LED to change by 1
+  int stepDelay = (mode == 0 ? 1000 : 100) / step; // the number of ms for an LED to change by 1
   int curColor = savedInt;
 
-  // spread the step size out over 1 second
+  // spread the step size out over the number of ms above
   for (int shadeOffset = 0; shadeOffset < step; shadeOffset++) {
     for (int cnt = 0; cnt < NUM_LEDS; cnt++) {
       int led = cnt + startLed;
