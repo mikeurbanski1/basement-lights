@@ -534,7 +534,7 @@ void progressiveRainbow() {
       if (led >= NUM_LEDS) {
         led -= NUM_LEDS;
       }
-      setPixelColor(led, getColor(curColor + shadeOffset));
+      setPixelColor(led, getColor(curColor - shadeOffset));
       curColor += step;
       if (curColor >= 384) {
         curColor -= 384;
