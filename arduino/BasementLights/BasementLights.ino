@@ -134,7 +134,7 @@ String modeCommands[] = {
 int NUM_MODES = 10;
 
 // mode state
-int mode = 2;
+int mode = 0;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
