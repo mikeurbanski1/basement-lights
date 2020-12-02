@@ -38,6 +38,7 @@ COLOR initColor = getColorRGB(255, 255, 0);
 
 // mode definition
 void progressiveRainbow();
+void progressiveRainbowSimple();
 void progressiveSolid();
 void starryNight();
 void breathing();
@@ -52,7 +53,7 @@ void randomZip();
 void (*modes[])() = {
   progressiveRainbow,
   progressiveSolid,
-  progressiveRainbow,
+  progressiveRainbowSimple,
   progressiveSolid,
   starryNight,
   breathing,
@@ -92,7 +93,7 @@ int modeLoops[] = {
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
 int modeLoopDelay[] = {
-  1000, //progressiveRainbow
+  0, //progressiveRainbow - delays handled within function
   1000, //progressiveSolid
   100, //progressiveRainbow fast
   100, //progressiveSolid fast
@@ -495,7 +496,7 @@ void alternate() {
   show();
 }
 
-void progressiveRainbow() {
+void progressiveRainbowSimple() {
   if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // rainbow starting color
   }
@@ -516,6 +517,34 @@ void progressiveRainbow() {
   }
 
   show();
+}
+
+void progressiveRainbow() {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
+    savedInt = random(0, 384); // rainbow starting color
+  }
+  int startLed = modeLoopNumber % NUM_LEDS;
+  int step = 384 / NUM_LEDS;
+  int stepDelay = 1000 / step; // the number of ms for an LED to change by 1
+  int curColor = savedInt;
+  
+  for (int shadeOffset = 0; shadeOffset < step; shadeOffset++) {
+    for (int cnt = 0; cnt < NUM_LEDS; cnt++) {
+      int led = cnt + startLed;
+      if (led >= NUM_LEDS) {
+        led -= NUM_LEDS;
+      }
+      setPixelColor(led, getColor(curColor + shadeOffset));
+      curColor += step;
+      if (curColor >= 384) {
+        curColor -= 384;
+      }
+    }
+    show();
+    delay(stepDelay);
+  }
+
+//  show();
 }
 
 void progressiveSolid() {
@@ -725,6 +754,14 @@ void turnOff(byte start, byte count) {
 }
 
 COLOR getColor(int val) {
+
+  while (val >= 384) {
+    val -= 384;
+  }
+  while (val < 0) {
+    val += 384;
+  }
+  
   byte r, g, b;
   
   switch(val / 128)
