@@ -525,7 +525,7 @@ void progressiveRainbow() {
   }
   int startLed = modeLoopNumber % NUM_LEDS;
   int step = 384 / NUM_LEDS;
-  int stepDelay = 1000 / step; // the number of ms for an LED to change by 1
+  int stepDelay = 4000 / step; // the number of ms for an LED to change by 1
   int curColor = savedInt;
   
   for (int shadeOffset = 0; shadeOffset < step; shadeOffset++) {
