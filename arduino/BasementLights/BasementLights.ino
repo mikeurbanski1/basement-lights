@@ -350,7 +350,7 @@ boolean checkCommand() {
         solid(currentColor);
       }
       else if (mode == RAINBOW_MODE) {
-        rainbow();
+        rainbow(false); //reuse the rainbow we just generated during init
       }
 
       initializing = false;
@@ -496,7 +496,7 @@ void alternate() {
 }
 
 void progressiveRainbow() {
-  if (modeLoopNumber == 0) {
+  if (modeIterationNumber == 0) { //don't set a new color if we are 
     savedInt = random(0, 384); // rainbow starting color
   }
   int startLed = modeLoopNumber % NUM_LEDS;
@@ -519,7 +519,7 @@ void progressiveRainbow() {
 }
 
 void progressiveSolid() {
-  if (modeLoopNumber == 0) {
+  if (modeIterationNumber == 0) {
     savedInt = random(0, 384); // starting color
   }
   COLOR color = getColor(savedInt);
