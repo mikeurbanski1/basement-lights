@@ -134,7 +134,7 @@ String modeCommands[] = {
 int NUM_MODES = 10;
 
 // mode state
-int mode = 0;
+int mode = 2;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -175,6 +175,7 @@ COLOR currentColor;
 // misc state variables that CAN be used by different modes (no mode should expect these to be valid if another mode executes);
 COLOR savedColor;
 int savedInt;
+int rainbowStart;
 
 void setup() {
 
@@ -256,6 +257,8 @@ void initialize() {
   }
 }
 
+int initDelayLength = 1000 / ledsPerInit;
+
 boolean checkCommand() {
   if (Serial.available() > 0) {
     String data = Serial.readStringUntil('\n');
@@ -269,34 +272,79 @@ boolean checkCommand() {
     else if (data.equals("INIT_0")) {
       initializing = true;
       off();
-      setStripColor(initColor, 0, ledsPerInit);
-
+      rainbowStart = random(0, 384); //pick a rainbow start color
+      savedInt = 384 / NUM_LEDS; //rainbow color step size
+      for (int led = 0; led < ledsPerInit; led++) {
+        setPixelColor(led, getColor(rainbowStart), true);
+        show();
+        delay(initDelayLength);
+        
+        rainbowStart += savedInt;
+        if (rainbowStart >= 384) {
+          rainbowStart -= 384;
+        }
+      }
+      
+      show();
       return true;
     }
     else if (data.equals("INIT_1")) {
-      setStripColor(initColor, ledsPerInit, ledsPerInit);
+      for (int led = ledsPerInit; led < 2 * ledsPerInit; led++) {
+        setPixelColor(led, getColor(rainbowStart), true);
+        show();
+        delay(initDelayLength);
+        
+        rainbowStart += savedInt;
+        if (rainbowStart >= 384) {
+          rainbowStart -= 384;
+        }
+      }
+      show();
       return true;
     }
     else if (data.equals("INIT_2")) {
-      setStripColor(initColor, 2 * ledsPerInit, ledsPerInit);
+      for (int led = 2 * ledsPerInit; led < 3 * ledsPerInit; led++) {
+        setPixelColor(led, getColor(rainbowStart), true);
+        show();
+        delay(initDelayLength);
+        
+        rainbowStart += savedInt;
+        if (rainbowStart >= 384) {
+          rainbowStart -= 384;
+        }
+      }
+      show();
       return true;
     }
     else if (data.equals("INIT_FINAL")) {
       // Indicate that the command was sent, then reset back to the previous actual state
-      off();
-      delay(500);
-      setStripColor(initColor);
-      delay(500);
-      off();
-      delay(500);
-      setStripColor(initColor);
-      delay(500);
-      off();
-      delay(500);
-      setStripColor(initColor);
-      delay(500);
-      off();
-      delay(500);
+//      off();
+//      delay(500);
+//      setStripColor(initColor);
+//      delay(500);
+//      off();
+//      delay(500);
+//      setStripColor(initColor);
+//      delay(500);
+//      off();
+//      delay(500);
+//      setStripColor(initColor);
+//      delay(500);
+//      off();
+//      delay(500);
+
+      int delayLength = 2000 / (NUM_LEDS - (3 * ledsPerInit));
+
+      for (int led = 3 * ledsPerInit; led < NUM_LEDS; led++) {
+        setPixelColor(led, getColor(rainbowStart));
+        show();
+        delay(delayLength);
+        
+        rainbowStart += savedInt;
+        if (rainbowStart >= 384) {
+          rainbowStart -= 384;
+        }
+      }
 
       if (mode == SOLID_MODE) {
         solid(currentColor);
@@ -630,8 +678,6 @@ void randomZip() {
     setPixelColor(pixel, OFF);
   }
 }
-
-int rainbowStart;
 
 void rainbow() {
   rainbow(true);
