@@ -570,7 +570,7 @@ void partialRainbow() {
   }
 
   for (int led = 0; led < NUM_LEDS; led++) {
-    setPixelColor(led, getColor(savedInt - led));
+    setPixelColor(led, getColor(savedInt + led));
   }
   show();
   
