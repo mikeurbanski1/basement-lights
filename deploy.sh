@@ -4,9 +4,9 @@ DEPLOYMENT_ROOT=~/lights
 
 if cmp -s "python/alexa.py" "$DEPLOYMENT_ROOT/python/alexa" ; then
    echo "No changes to alexa.py"
-   alexa_changed=false
+   alexa_changed="false"
 else
-   alexa_changed=true
+   alexa_changed="true"
 fi
 
 mkdir $DEPLOYMENT_ROOT
@@ -20,7 +20,7 @@ sudo cp systemd/alexa.service /etc/systemd/system/alexa.service
 sudo cp systemd/ngrok.service /etc/systemd/system/ngrok.service
 sudo systemctl daemon-reload
 
-if [[ $alexa_changed == true ]]; then
+if [[ "$alexa_changed" == "true" ]]; then
   echo "Restarting alexa service"
   sudo systemctl restart alexa.service
 fi
