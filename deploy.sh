@@ -2,15 +2,14 @@
 
 DEPLOYMENT_ROOT=~/lights
 
-if cmp -s "python/alexa.py" "$DEPLOYMENT_ROOT/python/alexa" ; then
+if cmp -s "python/alexa.py" "$DEPLOYMENT_ROOT/python/alexa.py" ; then
    echo "No changes to alexa.py"
    alexa_changed="false"
 else
    alexa_changed="true"
 fi
 
-mkdir $DEPLOYMENT_ROOT
-mkdir $DEPLOYMENT_ROOT/logs
+mkdir -p $DEPLOYMENT_ROOT/logs
 rm -rf $DEPLOYMENT_ROOT/python
 
 cp -R python $DEPLOYMENT_ROOT/python
