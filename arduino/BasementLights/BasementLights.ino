@@ -716,17 +716,17 @@ void starryNight() {
   }
 }
 
-void randomZip() {
+void zip() {
   off();
+  COLOR color = randomColor();
   for (int i = 0; i < NUM_LEDS; i++) {
-    COLOR color = randomColor();
     setPixelColor(i, color, true);
     delay(2);
     setPixelColor(i, OFF);
   }
 }
 
-void zip() {
+void randomZip() {
   COLOR color = randomColor();
   off();
   for (int i = 0; i < NUM_LEDS; i++) {
