@@ -30,7 +30,8 @@ mode_names = [
     'breathing rainbow',
     'breathing solid',
     'zip',
-    'random zip'
+    'random zip',
+    'partial rainbow'
 ]
 
 mode_mapping = {}

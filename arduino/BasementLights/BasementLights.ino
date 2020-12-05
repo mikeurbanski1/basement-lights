@@ -23,18 +23,18 @@ COLOR getColorRGB(int r, int g, int b); // definition for use in colors array
 COLOR initColor = getColorRGB(255, 255, 0);
 
 /*
- * How to add a mode:
- * 
- * 1. Add a method definition
- * 2. Add the method to the array
- * 3. Set the number of times the mode should be repeated (in autocycle mode)
- * 4. Set the number of iterations that constitute one full cycle of the mode
- * 5. Set the delay between iterations in #4
- * 6. Add a new entry into modeCommands
- * 7. Increment NUM_MODES
- * 8. Implement the method
- * 9. Enter a boolean for autocycleSkip
- */
+   How to add a mode:
+
+   1. Add a method definition
+   2. Add the method to the array
+   3. Set the number of times the mode should be repeated (in autocycle mode)
+   4. Set the number of iterations that constitute one full cycle of the mode
+   5. Set the delay between iterations in #4
+   6. Add a new entry into modeCommands
+   7. Increment NUM_MODES
+   8. Implement the method
+   9. Enter a boolean for autocycleSkip
+*/
 
 // mode definition
 void progressiveRainbow();
@@ -48,6 +48,7 @@ void marqueeSolid();
 void marqueeRainbow();
 void zip();
 void randomZip();
+void partialRainbow();
 
 
 void (*modes[])() = {
@@ -61,6 +62,8 @@ void (*modes[])() = {
   breathingSolid,
   zip,
   randomZip,
+  partialRainbow,
+  partialRainbow
 };
 
 // the number of times the mode should be repeated
@@ -73,8 +76,10 @@ int modeRepeat[] = {
   10, //breathing
   10, //breathingRainbow
   10, //breathingSolid
-  10,
-  10
+  10, // zip
+  10, //random zip
+  1,
+  1
 };
 
 // the number of iterations for one complete execution of the mode
@@ -87,8 +92,10 @@ int modeLoops[] = {
   2, //breathing - the breathing ones will use two loops - one to "inhale", one to "exhale"
   2, //breathingRainbow
   2, //breathingSolid
-  1,
-  1
+  1, //zip
+  1, //random zip
+  384, //partial rainbow
+  384  //partial rainbow fast
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
@@ -101,8 +108,10 @@ int modeLoopDelay[] = {
   1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
   1000, //breathingRainbow
   1000, //breathingSolid
+  1, 
   1,
-  1
+  1000,
+  100
 };
 
 boolean autocycleSkip[] = {
@@ -115,7 +124,9 @@ boolean autocycleSkip[] = {
   true,
   true,
   false,
-  false
+  false,
+  true,
+  true
 };
 
 // placeholders to accept mode commands
@@ -129,13 +140,15 @@ String modeCommands[] = {
   "MODE_6",
   "MODE_7",
   "MODE_8",
-  "MODE_9"
+  "MODE_9",
+  "MODE_10",
+  "MODE_11"
 };
 
-int NUM_MODES = 10;
+int NUM_MODES = 12;
 
 // mode state
-int mode = 0;
+int mode = 10;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -245,7 +258,7 @@ void loop() {
 
 void initialize() {
 
-//  firstOfOuterMode = true;
+  //  firstOfOuterMode = true;
 
   if (mode == SOLID_MODE) {
     solid();
@@ -279,13 +292,13 @@ boolean checkCommand() {
         setPixelColor(led, getColor(rainbowStart), true);
         show();
         delay(initDelayLength);
-        
+
         rainbowStart += savedInt;
         if (rainbowStart >= 384) {
           rainbowStart -= 384;
         }
       }
-      
+
       show();
       return true;
     }
@@ -294,7 +307,7 @@ boolean checkCommand() {
         setPixelColor(led, getColor(rainbowStart), true);
         show();
         delay(initDelayLength);
-        
+
         rainbowStart += savedInt;
         if (rainbowStart >= 384) {
           rainbowStart -= 384;
@@ -308,7 +321,7 @@ boolean checkCommand() {
         setPixelColor(led, getColor(rainbowStart), true);
         show();
         delay(initDelayLength);
-        
+
         rainbowStart += savedInt;
         if (rainbowStart >= 384) {
           rainbowStart -= 384;
@@ -319,20 +332,20 @@ boolean checkCommand() {
     }
     else if (data.equals("INIT_FINAL")) {
       // Indicate that the command was sent, then reset back to the previous actual state
-//      off();
-//      delay(500);
-//      setStripColor(initColor);
-//      delay(500);
-//      off();
-//      delay(500);
-//      setStripColor(initColor);
-//      delay(500);
-//      off();
-//      delay(500);
-//      setStripColor(initColor);
-//      delay(500);
-//      off();
-//      delay(500);
+      //      off();
+      //      delay(500);
+      //      setStripColor(initColor);
+      //      delay(500);
+      //      off();
+      //      delay(500);
+      //      setStripColor(initColor);
+      //      delay(500);
+      //      off();
+      //      delay(500);
+      //      setStripColor(initColor);
+      //      delay(500);
+      //      off();
+      //      delay(500);
 
       int delayLength = 2000 / (NUM_LEDS - (3 * ledsPerInit));
 
@@ -340,7 +353,7 @@ boolean checkCommand() {
         setPixelColor(led, getColor(rainbowStart));
         show();
         delay(delayLength);
-        
+
         rainbowStart += savedInt;
         if (rainbowStart >= 384) {
           rainbowStart -= 384;
@@ -545,7 +558,22 @@ void progressiveRainbow() {
     delay(stepDelay);
   }
 
-//  show();
+  //  show();
+}
+
+void partialRainbow() {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
+    savedInt = random(0, 384); // rainbow starting color
+  }
+  else {
+    savedInt ++;
+  }
+
+  for (int led = 0; led < NUM_LEDS; led++) {
+    setPixelColor(led, getColor(savedInt + led));
+  }
+  show();
+  
 }
 
 void progressiveSolid() {
@@ -565,7 +593,7 @@ void breathingSolid() {
     savedColor = randomColor();
   }
 
-  // The idea here is to do integer math to keep it simple while adjusting for drastic jumps in brightness. We'll start with a target step 
+  // The idea here is to do integer math to keep it simple while adjusting for drastic jumps in brightness. We'll start with a target step
   // count (granularity of changes)  to be 40, which is arbitrary. Then we'll recalculate to smooth it out.
   // For example, if brightness is 50, then step size will be 1 and # steps will be 40. So, we'd go from 50 down to 10 brightness
   // and then turn it off, and it would look like a sudden jump from 10 brightness to 0. So, we'll go gracefully down to 0.
@@ -575,7 +603,7 @@ void breathingSolid() {
   int stepSize = brightness / steps; //this will likely be a value of 1 or 2 (typical brightness will be < 80)
   steps = brightness / stepSize; //find the true number of steps. if brightness was 50, then stepSize == 1 so steps = 50. If brightness is 90, then stepSize == 2 so steps = 45.
   int stepDelay = duration / steps;
-  
+
 
   if (modeLoopNumber == 0) {
     // inhale - go from off up to set brightness
@@ -607,10 +635,10 @@ void breathing() {
 
   // see comments in breathingSolid
 
-  int duration = 2000; 
+  int duration = 2000;
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps; 
-  steps = brightness / stepSize; 
+  int stepSize = brightness / steps;
+  steps = brightness / stepSize;
   int stepDelay = duration / steps;
 
   if (modeLoopNumber == 0) {
@@ -643,10 +671,10 @@ void breathingRainbow() {
 
   // see comments in breathingSolid
 
-  int duration = 2000; 
+  int duration = 2000;
   int steps = min(brightness, 40);
-  int stepSize = brightness / steps; 
-  steps = brightness / stepSize; 
+  int stepSize = brightness / steps;
+  steps = brightness / stepSize;
   int stepDelay = duration / steps;
 
   if (modeLoopNumber == 0) {
@@ -688,7 +716,7 @@ void starryNight() {
   }
 }
 
-void zip() {
+void randomZip() {
   off();
   for (int i = 0; i < NUM_LEDS; i++) {
     COLOR color = randomColor();
@@ -698,7 +726,7 @@ void zip() {
   }
 }
 
-void randomZip() {
+void zip() {
   COLOR color = randomColor();
   off();
   for (int i = 0; i < NUM_LEDS; i++) {
@@ -762,53 +790,53 @@ COLOR getColor(int val) {
   while (val < 0) {
     val += 384;
   }
-  
+
   byte r, g, b;
-  
-  switch(val / 128)
+
+  switch (val / 128)
   {
     case 0:
       r = 255 - (val % 128) * 2;   //Red down
       g = (val % 128) * 2;      // Green up
       b = 0;                  //blue off
-      break; 
+      break;
     case 1:
       g = 255 - (val % 128) * 2;  //green down
       b = (val % 128) * 2;      //blue up
       r = 0;                  //red off
-      break; 
+      break;
     case 2:
-      b = 255 - (val % 128) * 2;  //blue down 
+      b = 255 - (val % 128) * 2;  //blue down
       r = (val % 128) * 2;      //red up
       g = 0;                  //green off
-      break; 
+      break;
   }
-  
+
   return getColorRGB(r, g, b);
 }
 
 byte getColorComponent(int val, char color) {
   byte r, g, b;
-  
-  switch(val / 128)
+
+  switch (val / 128)
   {
     case 0:
       r = 255 - (val % 128) * 2;   //Red down
       g = (val % 128) * 2;      // Green up
       b = 0;                  //blue off
-      break; 
+      break;
     case 1:
       g = 255 - (val % 128) * 2;  //green down
       b = (val % 128) * 2;      //blue up
       r = 0;                  //red off
-      break; 
+      break;
     case 2:
-      b = 255 - (val % 128) * 2;  //blue down 
+      b = 255 - (val % 128) * 2;  //blue down
       r = (val % 128) * 2;      //red up
       g = 0;                  //green off
-      break; 
+      break;
   }
-  
+
   if (color == 'r') {
     return r;
   }
@@ -827,11 +855,11 @@ COLOR randomColor() {
 
 COLOR getColorRGB(int r, int g, int b) {
 
-//  r = r * brightness / 255;
-//  g = g * brightness / 255;
-//  b = b * brightness / 255;
-//  return strip.Color(r, g, b);
-  
+  //  r = r * brightness / 255;
+  //  g = g * brightness / 255;
+  //  b = b * brightness / 255;
+  //  return strip.Color(r, g, b);
+
   return COLOR(r, g, b);
 }
 
@@ -847,6 +875,6 @@ void setPixelColor(int pixel, COLOR color, boolean update) {
 }
 
 void show() {
-//  strip.show();
+  //  strip.show();
   FastLED.show();
 }
