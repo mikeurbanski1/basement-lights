@@ -31,7 +31,8 @@ mode_names = [
     'breathing solid',
     'zip',
     'random zip',
-    'partial rainbow'
+    'partial rainbow',
+    'partial rainbow fast'
 ]
 
 mode_mapping = {}
