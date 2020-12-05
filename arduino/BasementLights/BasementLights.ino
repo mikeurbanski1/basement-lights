@@ -148,7 +148,7 @@ String modeCommands[] = {
 int NUM_MODES = 12;
 
 // mode state
-int mode = 10;
+int mode = 11;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -566,11 +566,11 @@ void partialRainbow() {
     savedInt = random(0, 384); // rainbow starting color
   }
   else {
-    savedInt ++;
+    savedInt--;
   }
 
   for (int led = 0; led < NUM_LEDS; led++) {
-    setPixelColor(led, getColor(savedInt + led));
+    setPixelColor(led, getColor(savedInt - led));
   }
   show();
   
