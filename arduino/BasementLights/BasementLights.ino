@@ -758,25 +758,27 @@ void isu() {
   COLOR gold = getColorRGB(255, 255, 0);
   COLOR c;
 
-  for (int i = 0; i < 8; i++) {
-    if (i < 8) {
-      if (i % 2 == 0) {
-        c = cardinal;
-      }
-      else {
-        c = gold;
-      }
-      
-      for (int led = 0; led < NUM_LEDS; led++) {
-        setPixelColor(led, c, true);
-        delay(1000 / 96);
+  while (true) {
+    for (int i = 0; i < 8; i++) {
+      if (i < 8) {
+        if (i % 2 == 0) {
+          c = cardinal;
+        }
+        else {
+          c = gold;
+        }
+        
+        for (int led = 0; led < NUM_LEDS; led++) {
+          setPixelColor(led, c, true);
+          delay(1000 / 96);
+        }
       }
     }
-  }
-
-  for (int i = 0; i < 16; i++) {
-    for (int led = 0; led < NUM_LEDS; led++) {
-      setPixelColor(led, ((i + led) % 2 == 0) ? cardinal : gold);
+  
+    for (int i = 0; i < 16; i++) {
+      for (int led = 0; led < NUM_LEDS; led++) {
+        setPixelColor(led, ((i + led) % 2 == 0) ? cardinal : gold);
+      }
       show();
       delay(500);
     }
