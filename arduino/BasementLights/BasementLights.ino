@@ -770,7 +770,7 @@ void isu() {
         
         for (int led = 0; led < NUM_LEDS; led++) {
           setPixelColor(led, c, true);
-          delay(1000 / 96);
+          delay(800 / 96);
         }
       }
     }
