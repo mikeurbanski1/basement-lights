@@ -49,6 +49,7 @@ void marqueeRainbow();
 void zip();
 void randomZip();
 void partialRainbow();
+void isu();
 
 
 void (*modes[])() = {
@@ -63,7 +64,8 @@ void (*modes[])() = {
   zip,
   randomZip,
   partialRainbow,
-  partialRainbow
+  partialRainbow,
+  isu
 };
 
 // the number of times the mode should be repeated
@@ -78,6 +80,7 @@ int modeRepeat[] = {
   10, //breathingSolid
   10, // zip
   10, //random zip
+  1,
   1,
   1
 };
@@ -95,7 +98,8 @@ int modeLoops[] = {
   1, //zip
   1, //random zip
   384, //partial rainbow
-  384  //partial rainbow fast
+  384,  //partial rainbow fast
+  3
 };
 
 // delay between iterations of the inner loop (i.e., delay between invocations of the mode method)
@@ -111,7 +115,8 @@ int modeLoopDelay[] = {
   1, 
   1,
   1000,
-  100
+  100,
+  0
 };
 
 boolean autocycleSkip[] = {
@@ -125,6 +130,7 @@ boolean autocycleSkip[] = {
   true,
   false,
   false,
+  true,
   true,
   true
 };
@@ -142,13 +148,14 @@ String modeCommands[] = {
   "MODE_8",
   "MODE_9",
   "MODE_10",
-  "MODE_11"
+  "MODE_11",
+  "MODE_12"
 };
 
-int NUM_MODES = 12;
+int NUM_MODES = 13;
 
 // mode state
-int mode = 11;
+int mode = 12;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -743,6 +750,27 @@ void rainbow() {
 
 void rainbow(boolean newColor) {
   rainbow(newColor, true);
+}
+
+void isu() {
+
+  COLOR cardinal = getColorRGB(255, 0, 0);
+  COLOR gold = getColorRGB(255, 255, 0);
+  COLOR c;
+  
+  if (modeLoopNumber < 8) {
+    if (modeLoopNumber % 2 == 0) {
+      c = cardinal;
+    }
+    else {
+      c = gold;
+    }
+
+    for (int led = 0; led < NUM_LEDS; led++) {
+      setPixelColor(led, c, true);
+      delay(1000 / 96);
+    }
+  }
 }
 
 void rainbow(boolean newColor, boolean update) {
