@@ -755,7 +755,7 @@ void rainbow(boolean newColor) {
 void isu() {
 
   COLOR cardinal = getColorRGB(255, 0, 0);
-  COLOR gold = getColorRGB(255, 255, 0);
+  COLOR gold = getColorRGB(150, 150, 0);
   COLOR c;
 
   while (true) {
