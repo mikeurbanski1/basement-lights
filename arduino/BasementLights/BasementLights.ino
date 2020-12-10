@@ -759,7 +759,7 @@ void isu() {
   COLOR c;
 
   while (true) {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 4; i++) {
       if (i < 8) {
         if (i % 2 == 0) {
           c = cardinal;
@@ -775,7 +775,7 @@ void isu() {
       }
     }
   
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 8; i++) {
       for (int led = 0; led < NUM_LEDS; led++) {
         setPixelColor(led, ((i + led) % 2 == 0) ? cardinal : gold);
       }
