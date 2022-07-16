@@ -1,4 +1,4 @@
-from python.alexa import app
+from python.alexa.alexa import app
 
 if __name__ == "__main__":
     app.run()

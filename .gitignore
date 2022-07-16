@@ -8,3 +8,4 @@ __pycache__
 smapi.json
 log.txt
 url.txt
+logs/

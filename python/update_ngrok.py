@@ -19,7 +19,7 @@ handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-handler = logging.handlers.RotatingFileHandler('logs/ngrok.log', maxBytes=1024 * 10, backupCount=5)
+handler = logging.handlers.RotatingFileHandler('../logs/ngrok.log', maxBytes=1024 * 10, backupCount=5)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
@@ -75,7 +75,7 @@ try:
             send_status_update(url, 'ngrok_running')
 
         # this just makes the URL easy to find in case we need it.
-        with open('logs/url.txt', 'w') as fp:
+        with open('../logs/url.txt', 'w') as fp:
             fp.write(url)
             logger.debug('Wrote new URL to logs/url.txt')
 
