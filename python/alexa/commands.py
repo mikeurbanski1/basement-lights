@@ -51,7 +51,6 @@ def shutdown():
 
 def send_command(command):
     logger.info(f'Sending command: "{command}"')
-    return True
     if not port:
         logger.error('Serial is not connected')
         return False
