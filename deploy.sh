@@ -9,6 +9,13 @@ else
    alexa_changed="true"
 fi
 
+if cmp -s "python/update_ngrok.py" "$DEPLOYMENT_ROOT/python/update_ngrok.py" ; then
+   echo "No changes to update_ngrok.py"
+   ngrok_changed="false"
+else
+   ngrok_changed="true"
+fi
+
 mkdir -p $DEPLOYMENT_ROOT/logs
 rm -rf $DEPLOYMENT_ROOT/python
 
@@ -22,6 +29,15 @@ sudo systemctl daemon-reload
 if [[ "$alexa_changed" == "true" ]]; then
   echo "Restarting alexa service"
   sudo systemctl restart alexa.service
+else
+  echo "Did not need to restart alexa service"
+fi
+
+if [[ "$ngrok_changed" == "true" ]]; then
+  echo "Restarting ngrok service"
+  sudo systemctl restart ngrok.service
+else
+  echo "Did not need to restart ngrok service"
 fi
 
 
