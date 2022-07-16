@@ -229,6 +229,7 @@ def help():
 
 @ask.session_ended
 def session_ended():
+    logger.debug('Got session ended request')
     return "{}", 200
 
 
