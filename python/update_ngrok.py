@@ -8,7 +8,7 @@ import re
 
 # welcome to the jankiest script ever
 
-pattern = re.compile(r'https://[a-z0-9]+\.ngrok\.io')  # regex pattern for ngrok url in ngrok log file
+pattern = re.compile(r'https://[a-z0-9\-]+\.ngrok\.io')  # regex pattern for ngrok url in ngrok log file
 
 logger = logging.getLogger(__name__)
 logger.setLevel('DEBUG')
