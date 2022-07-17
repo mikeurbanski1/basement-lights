@@ -176,7 +176,7 @@ String modeCommands[] = {
   "MODE_13"
 };
 
-int NUM_MODES = 14;
+int NUM_MODES = 13;
 
 // mode state
 int mode = 12;
@@ -607,6 +607,9 @@ void partialRainbow() {
   }
   else {
     savedInt--;
+    if (savedInt < 0) {
+        savedInt = 383;
+    }
   }
 
   for (int led = 0; led < NUM_LEDS; led++) {
@@ -890,10 +893,6 @@ COLOR getColor(int val) {
   }
 
   return getColorRGB(r, g, b);
-}
-
-int intFromColor(COLOR color) {
-
 }
 
 byte getColorComponent(int val, char color) {
