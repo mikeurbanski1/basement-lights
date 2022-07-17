@@ -159,7 +159,7 @@ int mode = 11;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
-
+boolean firstLoop = true;
 int brightness = 40;
 
 // colors
@@ -223,9 +223,11 @@ void loop() {
 
   if (autoCycle) {
     while (true) {
+      firstLoop = true;
       for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode] && !autocycleSkip[mode]; modeIterationNumber++) {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
           modes[mode]();
+          firstLoop = false;
           delay(modeLoopDelay[mode]);
 
           // check if a command was issued; if so, the command will reset the state and we'll start at the top
@@ -244,9 +246,11 @@ void loop() {
   else if (mode >= 0 && mode < NUM_MODES) {
     // a mode was explicitly selected, so just run the inner loop repeatedly
     modeIterationNumber = 0;
+    firstLoop = true;
     while (true) {
       for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
         modes[mode]();
+        firstLoop = false;
         delay(modeLoopDelay[mode]);
         if (checkCommand()) {
           return;
@@ -517,7 +521,7 @@ void alternate() {
 }
 
 void progressiveRainbowSimple() {
-  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
+  if (firstLoop) {
     savedInt = random(0, 384); // rainbow starting color
   }
   int startLed = modeLoopNumber % NUM_LEDS;
@@ -540,7 +544,7 @@ void progressiveRainbowSimple() {
 }
 
 void progressiveRainbow() {
-  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
+  if (firstLoop) {
     savedInt = random(0, 384); // rainbow starting color
   }
   int startLed = modeLoopNumber % NUM_LEDS;
@@ -569,7 +573,7 @@ void progressiveRainbow() {
 }
 
 void partialRainbow() {
-  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
+  if (firstLoop) {
     savedInt = random(0, 384); // rainbow starting color
   }
   else {
@@ -584,7 +588,7 @@ void partialRainbow() {
 }
 
 void progressiveSolid() {
-  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
+  if (firstLoop) {
     savedInt = random(0, 384); // starting color
   }
   COLOR color = getColor(savedInt);
@@ -596,7 +600,7 @@ void progressiveSolid() {
 }
 
 void breathingSolid() {
-  if (modeIterationNumber == 0 && modeLoopNumber == 0) { // pick one color and repeat it until the mode changes
+  if (firstLoop) { // pick one color and repeat it until the mode changes
     savedColor = randomColor();
   }
 
