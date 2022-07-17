@@ -55,6 +55,9 @@ class ComponentColorChangeIntentHandler(AbstractRequestHandler):
         color = values.get('color')
         value = values.get('value')
 
+        logger.debug(f'Color: {color}')
+        logger.debug(f'Value: {value}')
+
         if color.lower() not in ['red', 'green', 'blue']:
             response = 'Color must be red, green, or blue'
         else:
