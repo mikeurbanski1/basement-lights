@@ -100,8 +100,8 @@ int modeLoops[] = {
   2, //breathingSolid
   1, //zip
   1, //random zip
-  384, //partial rainbow
-  384,  //partial rainbow fast
+  384, //partial rainbow fast
+  384,  //partial rainbow
   100,
   3
 };
@@ -179,7 +179,7 @@ String modeCommands[] = {
 int NUM_MODES = 14;
 
 // mode state
-int mode = 11;
+int mode = 12;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
