@@ -49,7 +49,6 @@ void marqueeRainbow();
 void zip();
 void randomZip();
 void partialRainbow();
-void fireplace();
 void isu();
 
 
@@ -66,7 +65,6 @@ void (*modes[])() = {
   randomZip,
   partialRainbow,
   partialRainbow,
-  fireplace,
   isu
 };
 
@@ -84,7 +82,6 @@ int modeRepeat[] = {
   10, //random zip
   1,
   1,
-  1,
   1
 };
 
@@ -100,9 +97,8 @@ int modeLoops[] = {
   2, //breathingSolid
   1, //zip
   1, //random zip
-  384, //partial rainbow fast
-  384,  //partial rainbow
-  100,
+  384, //partial rainbow
+  384,  //partial rainbow fast
   3
 };
 
@@ -116,11 +112,10 @@ int modeLoopDelay[] = {
   1000, //breathing - the breathing modes manage some of their own delays, so this is only the time "between breaths"
   1000, //breathingRainbow
   1000, //breathingSolid
-  1, 
+  1,
   1,
   1000,
   100,
-  1,
   0
 };
 
@@ -137,25 +132,7 @@ boolean autocycleSkip[] = {
   false,
   true,
   true,
-  true,
   true
-};
-
-boolean modeAcceptsColorChange[] = {
-  false,
-  true,
-  false,
-  true,
-  false,
-  true,
-  false,
-  true,
-  false,
-  false,
-  false,
-  false,
-  true,
-  false
 };
 
 // placeholders to accept mode commands
@@ -172,18 +149,16 @@ String modeCommands[] = {
   "MODE_9",
   "MODE_10",
   "MODE_11",
-  "MODE_12",
-  "MODE_13"
+  "MODE_12"
 };
 
 int NUM_MODES = 13;
 
 // mode state
-int mode = 12;
+int mode = 11;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
-boolean firstLoop = true;
 
 int brightness = 40;
 
@@ -251,7 +226,6 @@ void loop() {
       for (modeIterationNumber = 0; modeIterationNumber < modeRepeat[mode] && !autocycleSkip[mode]; modeIterationNumber++) {
         for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
           modes[mode]();
-          firstLoop = false;
           delay(modeLoopDelay[mode]);
 
           // check if a command was issued; if so, the command will reset the state and we'll start at the top
@@ -265,17 +239,14 @@ void loop() {
         mode = 0;
       }
       reset();
-      firstLoop = true;
     }
   }
   else if (mode >= 0 && mode < NUM_MODES) {
     // a mode was explicitly selected, so just run the inner loop repeatedly
     modeIterationNumber = 0;
-    firstLoop = true;
     while (true) {
       for (modeLoopNumber = 0; modeLoopNumber < modeLoops[mode]; modeLoopNumber++) {
         modes[mode]();
-        firstLoop = false;
         delay(modeLoopDelay[mode]);
         if (checkCommand()) {
           return;
@@ -476,14 +447,10 @@ boolean checkCommand() {
       // check for a matching color
       for (int m = 0; m < NUM_COLORS; m++) {
         if (data.equals(colorNames[m])) {
-       //   if (modeAcceptsColorChange[mode]) {
-       //     currentColor = colors[m];
-       //   } else {
-            solid(colors[m]);
-            mode = SOLID_MODE;
-            autoCycle = false;
-            return true;
-       //   }
+          solid(colors[m]);
+          mode = SOLID_MODE;
+          autoCycle = false;
+          return true;
         }
       }
     }
@@ -550,7 +517,7 @@ void alternate() {
 }
 
 void progressiveRainbowSimple() {
-  if (firstLoop) {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // rainbow starting color
   }
   int startLed = modeLoopNumber % NUM_LEDS;
@@ -573,7 +540,7 @@ void progressiveRainbowSimple() {
 }
 
 void progressiveRainbow() {
-  if (firstLoop) {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // rainbow starting color
   }
   int startLed = modeLoopNumber % NUM_LEDS;
@@ -602,25 +569,22 @@ void progressiveRainbow() {
 }
 
 void partialRainbow() {
-  if (firstLoop) {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // rainbow starting color
   }
   else {
     savedInt--;
-    if (savedInt < 0) {
-        savedInt = 383;
-    }
   }
 
   for (int led = 0; led < NUM_LEDS; led++) {
     setPixelColor(led, getColor(savedInt + led));
   }
   show();
-  
+
 }
 
 void progressiveSolid() {
-  if (firstLoop) {
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) {
     savedInt = random(0, 384); // starting color
   }
   COLOR color = getColor(savedInt);
@@ -632,7 +596,7 @@ void progressiveSolid() {
 }
 
 void breathingSolid() {
-  if (firstLoop) { // pick one color and repeat it until the mode changes
+  if (modeIterationNumber == 0 && modeLoopNumber == 0) { // pick one color and repeat it until the mode changes
     savedColor = randomColor();
   }
 
@@ -803,14 +767,14 @@ void isu() {
         else {
           c = gold;
         }
-        
+
         for (int led = 0; led < NUM_LEDS; led++) {
           setPixelColor(led, c, true);
           delay(800 / 96);
         }
       }
     }
-  
+
     for (int i = 0; i < 8; i++) {
       for (int led = 0; led < NUM_LEDS; led++) {
         setPixelColor(led, ((i + led) % 2 == 0) ? cardinal : gold);
@@ -837,10 +801,6 @@ void rainbow(boolean newColor, boolean update) {
   if (update) {
     show();
   }
-}
-
-void fireplace() {
-
 }
 
 void setStripColor(COLOR color) {
