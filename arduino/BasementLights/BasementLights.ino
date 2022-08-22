@@ -66,7 +66,7 @@ void (*modes[])() = {
   randomZip,
   partialRainbow,
   partialRainbow,
-  fireplace
+  fireplace,
   isu
 };
 
@@ -102,7 +102,7 @@ int modeLoops[] = {
   1, //random zip
   384, //partial rainbow
   384,  //partial rainbow fast
-  1200 // fireplace
+  1200, // fireplace
   3
 };
 
