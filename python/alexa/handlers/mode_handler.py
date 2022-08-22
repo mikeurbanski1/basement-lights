@@ -23,7 +23,8 @@ mode_names = [
     'zip',
     'random zip',
     'partial rainbow',
-    'partial rainbow fast'
+    'partial rainbow fast',
+    'fireplace'
 ]
 
 mode_mapping = {}

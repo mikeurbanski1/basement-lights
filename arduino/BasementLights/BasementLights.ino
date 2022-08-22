@@ -50,6 +50,7 @@ void zip();
 void randomZip();
 void partialRainbow();
 void isu();
+void fireplace();
 
 
 void (*modes[])() = {
@@ -65,6 +66,7 @@ void (*modes[])() = {
   randomZip,
   partialRainbow,
   partialRainbow,
+  fireplace
   isu
 };
 
@@ -80,6 +82,7 @@ int modeRepeat[] = {
   10, //breathingSolid
   10, // zip
   10, //random zip
+  1,
   1,
   1,
   1
@@ -99,6 +102,7 @@ int modeLoops[] = {
   1, //random zip
   384, //partial rainbow
   384,  //partial rainbow fast
+  1200 // fireplace
   3
 };
 
@@ -116,6 +120,7 @@ int modeLoopDelay[] = {
   1,
   1000,
   100,
+  100,
   0
 };
 
@@ -132,6 +137,7 @@ boolean autocycleSkip[] = {
   false,
   true,
   true,
+  false,
   true
 };
 
@@ -149,13 +155,14 @@ String modeCommands[] = {
   "MODE_9",
   "MODE_10",
   "MODE_11",
-  "MODE_12"
+  "MODE_12",
+  "MODE_13"
 };
 
-int NUM_MODES = 13;
+int NUM_MODES = 14;
 
 // mode state
-int mode = 11;
+int mode = 12;
 boolean autoCycle = false;
 int modeIterationNumber = 0; // the current count of the outer mode repeat loop
 int modeLoopNumber = 0; // the current count of the inner loop for one cycle of a mode
@@ -756,6 +763,24 @@ void rainbow(boolean newColor) {
   rainbow(newColor, true);
 }
 
+void fireplace() {
+  if (firstLoop) {
+    for (int pixel = 0; pixel < NUM_LEDS; pixel++) {
+      COLOR color = getRandomFireColor();
+      setPixelColor(pixel, color);
+    }
+  }
+  else {
+    for (int i = 0; i < 10; i++) {
+      int pixel = random(0, NUM_LEDS);
+      COLOR color = getRandomFireColor();
+      setPixelColor(pixel, color);
+    }
+  }
+
+  show();
+}
+
 void isu() {
 
   COLOR cardinal = getColorRGB(255, 0, 0);
@@ -805,6 +830,13 @@ void rainbow(boolean newColor, boolean update) {
   if (update) {
     show();
   }
+}
+
+COLOR getRandomFireColor() {
+  int green = random(5, 65);
+  int scale = random(10, 255);
+  COLOR color = COLOR(255, green, 0) % scale;
+  return color;
 }
 
 void setStripColor(COLOR color) {
