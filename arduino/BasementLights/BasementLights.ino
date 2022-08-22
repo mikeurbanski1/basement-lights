@@ -833,7 +833,7 @@ void rainbow(boolean newColor, boolean update) {
 }
 
 COLOR getRandomFireColor() {
-  int green = random(10, 65);
+  int green = random(13, 65);
   int scale = random(10, 255);
   COLOR color = COLOR(255, green, 0) % scale;
   return color;
